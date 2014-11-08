@@ -22,3 +22,7 @@ Function.prototype.extends = function(baseClass, typeName) {
     }
 
 }
+
+ACEX = function() {}
+THREE = function() {}
+_acex = null
