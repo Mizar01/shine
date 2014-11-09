@@ -42,7 +42,7 @@ ACEX.CooldownTimer.prototype.trigger = function() {
     if (this.stopped) {
         return true
     }
-    this.time -= _acex_time.frameDelta
+    this.time -= getAcex().time.frameDelta
     if (this.time <= 0) {
         if (this.autoRestart) {
             // TRIGGER AND RESET COOLDOWN

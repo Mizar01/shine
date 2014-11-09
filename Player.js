@@ -13,6 +13,7 @@ Player = function() {
 		true)
 	this.speed = 2
 	this.center()
+	this.reaches = 0
 }
 
 Player.extends(ACEX.Actor, "Player")
@@ -29,9 +30,14 @@ Player.prototype.run = function() {
 Player.prototype.moveTowardTargetPoint = function() {
 	var p1 = this.obj.position
 	var p2 = targetCursor.obj.position
-	if (Utils.pointDistance(p1, p2) < 2) {
+	if (ACEX.Utils.pointDistance(p1, p2) < 2) {
 		targetCursor.setForRemoval()
 		targetCursor = null
+		this.reaches++
+		if (this.reaches >= 3) {
+			this.reaches = 0
+			this.levelUp()
+		}
 	}else {
 		var angle = Math.atan2((p2.y - p1.y),(p2.x - p1.x))
 	    this.obj.position.set(
@@ -43,13 +49,15 @@ Player.prototype.moveTowardTargetPoint = function() {
 
 Player.prototype.setRandomPosition = function(topPos) {
 	var isTop = topPos || false
-	var x = Utils.randInt(-10, wh[0] + 10)
+	var x = ACEX.Utils.randInt(-10, wh[0] + 10)
 	var y = -10
 	if (!isTop) {
-		y = Utils.randInt(-10, wh[1] + 10)
+		y = ACEX.Utils.randInt(-10, wh[1] + 10)
 	}
 	this.obj.position.set(x, y)
 }
-Player.prototype.center = function() {
-	this.obj.position.set(wh[0]/2, wh[1]/2)
+
+Player.prototype.levelUp = function() {
+	this.level++
+	hudObjects.levelLabel.update()
 }
