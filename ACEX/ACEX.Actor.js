@@ -2,6 +2,7 @@ ACEX.Actor = function() {
 	this.alive = true
 	this.children = []
 	this.obj = null
+    this.owner = null
 }
 
 ACEX.Actor.prototype.__run = function() {

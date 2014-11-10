@@ -8,12 +8,11 @@ Player = function() {
 	this.obj = new PIXI.Graphics()
 	this.obj.lineStyle(5, 0xaaaaff)
 	this.obj.drawCircle(0, 0, 10)
-	this.cooldown = new ACEX.CooldownTimer(
-		Math.max(0.02, 0.5),
-		true)
+	this.cooldown = new ACEX.CooldownTimer(Math.max(0.02, 0.2), false)
 	this.speed = 2
 	this.center()
 	this.reaches = 0
+	this.radialFire = null
 }
 
 Player.extends(ACEX.Actor, "Player")
@@ -22,8 +21,10 @@ Player.prototype.run = function() {
 	if (targetCursor != null) {
 		this.moveTowardTargetPoint()
 	}
-	if (this.cooldown.trigger()) {
-		this.addChild(new RadialFire(this))
+	if (this.radialFire == null && this.cooldown.trigger()) {
+		this.radialFire = new RadialFire(this)
+		this.addChild(this.radialFire)
+		this.cooldown.restart()
 	}
 }
 

@@ -39,7 +39,8 @@ RandomEnemyGenerator.prototype.spawnEnemy = function() {
 	var a = ACEX.Utils.randFloat(0, Math.PI * 2)
 	rx = w/2 + Math.cos(a) * d
 	ry = h/2 + Math.sin(a) * d
-	var e = new Bug(1)
+	var lvl = ACEX.Utils.randInt(1, 6)
+	var e = new Bug(lvl)
 	e.obj.position.set(rx, ry)
 	gameLayer.addChild(e)
 }
