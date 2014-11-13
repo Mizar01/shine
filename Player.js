@@ -1,6 +1,6 @@
 Player = function() {
 	ACEX.Actor.call(this);
-	this.name = "Player"
+	this.name = "Player One"
 	this.life = 100
 	this.damage = 1
 	this.level = 5
