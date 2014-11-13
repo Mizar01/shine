@@ -8,13 +8,14 @@ Enemy = function(level, name) {
 }
 Enemy.extends(ACEX.Actor, "Enemy")
 Enemy.prototype.followPlayer = function() {
-	this.followPoint(player.obj.position, this.speed)
+	this.followPoint(gameVars.player.obj.position, this.speed)
 	this.radialFireDamageControl()
 }
 Enemy.prototype.radialFireDamageControl = function() {
-	var rf = player.radialFire
+	var pl = gameVars.player
+	var rf = pl.radialFire
 	if (rf != null) {
-		var dp = ACEX.Utils.actorDistance(this, player)
+		var dp = ACEX.Utils.actorDistance(this, pl)
 		if (Math.abs(dp - rf.radius) < 2) {
 			this.takeDamage(rf.damage)
 		}
@@ -23,13 +24,26 @@ Enemy.prototype.radialFireDamageControl = function() {
 Enemy.prototype.takeDamage = function(d) {
 	this.damage -= d
 	if (this.damage <= 0) {
-		gameLayer.addChild(new Explosion(20, this.obj.position))
-		this.setForRemoval()
+		this.explode()
 	}
 }
+Enemy.prototype.playerProximityControl = function() {
+	var pl = gameVars.player
+	if (ACEX.Utils.actorDistance(this, pl) < 5) {
+		console.log("aaaaahhhh")
+		gameVars.player.getDamage(this.damage * 10)
+		this.explode()
+	}
+}
+Enemy.prototype.explode = function() {
+	gameLayer.addChild(new Explosion(20, this.obj.position))
+	this.setForRemoval()
+}
 
-
-
+Enemy.prototype.run = function() {
+	this.followPlayer()
+	this.playerProximityControl()
+}
 
 Bug = function(level, name) {
 	Enemy.call(this, level, name)
@@ -40,8 +54,3 @@ Bug = function(level, name) {
 	this.obj.endFill()
 }
 Bug.extends(Enemy, "Bug")
-Bug.prototype.run = function() {
-	this.followPlayer()
-	
-}
-

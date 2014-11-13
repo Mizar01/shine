@@ -21,7 +21,7 @@ InGameMouseLogic.prototype.setTarget = function() {
 
 RandomEnemyGenerator = function() {
 	ACEX.Logic.call(this)
-	this.cooldown = new ACEX.CooldownTimer(0.01, true)
+	this.cooldown = new ACEX.CooldownTimer(5, true)
 }
 RandomEnemyGenerator.extends(ACEX.Logic, "RandomEnemyGenerator")
 
@@ -45,6 +45,36 @@ RandomEnemyGenerator.prototype.spawnEnemy = function() {
 	gameLayer.addChild(e)
 }
 
+CameraShakeLogic = function() {
+	ACEX.Logic.call(this)
+	this.refresh = false
+	this.maxShakeRadius = 5
+	this.shakeRadius = 0
+}
+CameraShakeLogic.extends(ACEX.Logic, "CameraShakeLogic")
 
+CameraShakeLogic.prototype.run = function() {
+	if (this.refresh) {
+	    this.shakeRadius = this.maxShakeRadius
+	    this.refresh = false
+	}
+	if (this.shakeRadius > 0) {
+		var m = this.shakeRadius % 2
+		var dir = -1 
+		if (m == 0) {
+			dir = 1
+		}
+		this.shakeRadius--
+		gameLayer.obj.position.x  = this.shakeRadius * dir
+		console.log(gameLayer.obj.position.x)
+		//repositioning only once if necessary
+		if (this.shakeRadius <= 0) {
+			this.rest()
+		}
+	}
+}
 
+CameraShakeLogic.prototype.rest = function() {
+	gameLayer.obj.position.set(0, 0)
+}
 

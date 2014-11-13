@@ -1,9 +1,9 @@
 Player = function() {
 	ACEX.Actor.call(this);
 	this.name = "Player"
-	this.health = 100
+	this.life = 100
 	this.damage = 1
-	this.level = 1
+	this.level = 5
 	this.attackCooldown = 10
 	this.obj = new PIXI.Graphics()
 	this.obj.lineStyle(5, 0xaaaaff)
@@ -61,4 +61,9 @@ Player.prototype.setRandomPosition = function(topPos) {
 Player.prototype.levelUp = function() {
 	this.level++
 	hudObjects.levelLabel.update()
+}
+
+Player.prototype.getDamage = function(d) {
+	this.life -= d
+	hudObjects.lifeLabel.update()
 }

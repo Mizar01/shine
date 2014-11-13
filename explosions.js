@@ -6,6 +6,7 @@ Explosion = function(maxRadius, pos) {
 	this.redraw()
 	this.obj.position = pos.clone()
 	this.speed = 2
+	gameVars.cameraShake.refresh = true
 }
 Explosion.extends(ACEX.Actor, "Explosion")
 Explosion.prototype.redraw = function() {

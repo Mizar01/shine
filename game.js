@@ -1,8 +1,11 @@
 
-var player = null
 var targetCursor = null
 var setTargetRequested = false
 
+var gameVars = []
+gameVars.cameraShake = null
+gameVars.player = null
+gameVars.cameraShake = null
 
 
 var gameView
@@ -28,14 +31,20 @@ function define_game() {
 	gameView.addChild(hudLayer)
 	gameView.addLogic(new InGameMouseLogic())
 	gameView.addLogic(new RandomEnemyGenerator())
+	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
 
-	player = new Player()
-	gameLayer.addChild(player)
-	hudObjects.levelLabel = new ACEX.BText("Level 1", 0xffaa00)
+	gameVars.player = new Player()
+	gameLayer.addChild(gameVars.player)
+	hudObjects.levelLabel = new ACEX.BText("Level 1", 0xffaa00, 40, 40)
 	hudObjects.levelLabel.update = function() {
-		this.updateText("Level " + player.level)
+		this.updateText("Level " + gameVars.player.level)
 	}
-	hudLayer.addChild(hudObjects["levelLabel"])
+	hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 200, 40)
+	hudObjects.lifeLabel.update = function() {
+		this.updateText("Life " + gameVars.player.life)
+	}
+	hudLayer.addChild(hudObjects.levelLabel)
+	hudLayer.addChild(hudObjects.lifeLabel)
 
 	acex.run()
 }
