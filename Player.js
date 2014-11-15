@@ -10,7 +10,6 @@ Player = function() {
 	this.obj.drawCircle(0, 0, 10)
 	this.cooldown = new ACEX.CooldownTimer(Math.max(0.02, 0.2), false)
 	this.speed = 2
-	this.center()
 	this.reaches = 0
 	this.radialFire = null
 }

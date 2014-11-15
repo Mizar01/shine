@@ -22,9 +22,18 @@ function init() {
 }
 
 function define_game() {
+
+	//Basic Structure 
+	//	gameView (containerActors and logics)
+	//		|----- gameLayer  (actors and logics)
+	//		|----- hudLayer   (actors and logics)
+	//	otherView ...
+
 	// Main game View (composite of game layer plus HUD layer)
 	gameView = new ACEX.ContainerActor()
 	gameLayer = new ACEX.ContainerActor()
+	//put gameLayer in center position
+	gameLayer.center()
 	hudLayer = new ACEX.ContainerActor()
 	acex.stageActor.addChild(gameView)
 	gameView.addChild(gameLayer)
@@ -32,9 +41,16 @@ function define_game() {
 	gameView.addLogic(new InGameMouseLogic())
 	gameView.addLogic(new RandomEnemyGenerator())
 	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
+	gameView.addLogic(gameVars.cameraMove = new CameraMoveLogic())
 
-	gameVars.player = new Player()
-	gameLayer.addChild(gameVars.player)
+	//Adding a background grid
+	gameLayer.addChild(gameVars.grid = new Grid(100))
+	gameLayer.addChild(gameVars.player = new Player())
+	setupHudLayer()
+	acex.run()
+}
+
+function setupHudLayer() {
 	hudObjects.levelLabel = new ACEX.BText("Level 1", 0xffaa00, 40, 40)
 	hudObjects.levelLabel.update = function() {
 		this.updateText("Level " + gameVars.player.level)
@@ -45,7 +61,5 @@ function define_game() {
 	}
 	hudLayer.addChild(hudObjects.levelLabel)
 	hudLayer.addChild(hudObjects.lifeLabel)
-
-	acex.run()
 }
 

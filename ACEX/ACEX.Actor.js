@@ -58,7 +58,6 @@ ACEX.Actor.prototype.followPoint = function(p2, speed) {
     }
 }
 
-
 ACEX.StageActor = function() {
     ACEX.Actor.call(this)
     this.obj = new PIXI.Stage(0x000000) 

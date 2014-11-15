@@ -14,14 +14,14 @@ InGameMouseLogic.prototype.setTarget = function() {
 		targetCursor.setForRemoval()
 		targetCursor = null
 	}
-	targetCursor = new TargetCursor(acex.getMouseCoords())
+	targetCursor = new TargetCursor(acex.getMousePoint(gameLayer))
 	gameLayer.addChild(targetCursor)
 }
 
 
 RandomEnemyGenerator = function() {
 	ACEX.Logic.call(this)
-	this.cooldown = new ACEX.CooldownTimer(5, true)
+	this.cooldown = new ACEX.CooldownTimer(0.5, true)
 }
 RandomEnemyGenerator.extends(ACEX.Logic, "RandomEnemyGenerator")
 
@@ -37,8 +37,8 @@ RandomEnemyGenerator.prototype.spawnEnemy = function() {
 	var h = acex.sh
 	var d = w/2 + h/2
 	var a = ACEX.Utils.randFloat(0, Math.PI * 2)
-	rx = w/2 + Math.cos(a) * d
-	ry = h/2 + Math.sin(a) * d
+	rx = gameVars.player.obj.x + Math.cos(a) * d
+	ry = gameVars.player.obj.y + Math.sin(a) * d
 	var lvl = ACEX.Utils.randInt(1, 6)
 	var e = new Bug(lvl)
 	e.obj.position.set(rx, ry)
@@ -65,8 +65,7 @@ CameraShakeLogic.prototype.run = function() {
 			dir = 1
 		}
 		this.shakeRadius--
-		gameLayer.obj.position.x  = this.shakeRadius * dir
-		console.log(gameLayer.obj.position.x)
+		gameLayer.obj.position.x  += this.shakeRadius * dir
 		//repositioning only once if necessary
 		if (this.shakeRadius <= 0) {
 			this.rest()
@@ -75,6 +74,73 @@ CameraShakeLogic.prototype.run = function() {
 }
 
 CameraShakeLogic.prototype.rest = function() {
+	gameLayer.obj.position = gameVars.cameraMove.worldPosition.clone()
+}
+
+/**
+* The camera will be moving the entire gameLayer whenever the player is 
+* trespassing the thresholdbounds.
+* The speed of movement is determined by the speed of the player going out 
+* of these bounds.
+*/
+CameraMoveLogic = function() {
+	ACEX.Logic.call(this)
+	this.refresh = false
+	this.absoluteCenter = new PIXI.Point(acex.sw/2, acex.sh/2)
+	this.worldPosition = gameLayer.obj.position.clone() 
+	this.boxSpan = new PIXI.Point(160, 120) //the thresholds of width and height
+	// this.drawTestBoundingBox()
+}
+CameraMoveLogic.extends(ACEX.Logic, "CameraMoveLogic")
+
+CameraMoveLogic.prototype.run = function() {
+	var diff = this.playerDiffs()
+	//console.log(diff)
+	if (diff.x != 0 || diff.y != 0) {
+		this.worldPosition.x -= diff.x * 0.02
+		this.worldPosition.y -= diff.y * 0.02
+		gameLayer.obj.position = this.worldPosition.clone()
+	}
+}
+
+/**
+* playerDiffs evaluates how far the player is going out of 
+* the threshold box. If it's inside the box the diff is zero.
+*/
+CameraMoveLogic.prototype.playerDiffs = function() {
+	var pp = gameVars.player.obj.position
+	var b = this.boxSpan
+	var c = this.worldPosition
+	var absC = this.absoluteCenter
+	var rx = pp.x + c.x - absC.x //in few words : relative to the center of the screen
+	var ry = pp.y + c.y - absC.y
+	// calculate x diff
+	var xdiff = 0
+	if (rx < -b.x) {
+		xdiff = rx + b.x 
+	}else if (rx > b.x) {
+		xdiff = rx - b.x
+	}
+	var ydiff = 0
+	if (ry < - b.y) {
+		ydiff = ry + b.y 
+	}else if (ry > b.y) {
+		ydiff = ry - b.y
+	}
+	//console.log(xdiff, ydiff)
+	return new PIXI.Point(xdiff, ydiff)
+}
+
+CameraMoveLogic.prototype.rest = function() {
 	gameLayer.obj.position.set(0, 0)
 }
 
+CameraMoveLogic.prototype.drawTestBoundingBox = function() {
+	var b = this.boxSpan
+	var o = new PIXI.Graphics()
+	o.lineStyle(2, 0xffff00)
+	o.alpha = 0.2
+	o.drawRect(-b.x, -b.y, b.x * 2, b.y * 2)
+	o.position.set(acex.sw/2, acex.sh/2)
+	acex.stageActor.obj.addChild(o)
+}
