@@ -47,15 +47,31 @@ ACEX.Actor.prototype.center = function() {
     this.obj.position.set(getAcex().sw/2, getAcex().sh/2)
 }
 
-ACEX.Actor.prototype.followPoint = function(p2, speed) {
+ACEX.Actor.prototype.followPoint = function(p2, speed, rotate) {
+    var mustRotate = rotate || false
     var p1 = this.obj.position
     if (ACEX.Utils.pointDistance(p1, p2) > 3) {
-        var angle = Math.atan2((p2.y - p1.y),(p2.x - p1.x))
+        var angle = ACEX.Utils.angleToPoint(p1, p2)
         this.obj.position.set(
             p1.x + Math.cos(angle) * speed,
             p1.y + Math.sin(angle) * speed
         )
+        if (mustRotate) {
+            this.obj.rotation = angle
+        }
     }
+}
+
+ACEX.Actor.prototype.rotateToPoint = function(p2) {
+    this.obj.rotation = ACEX.Utils.angleToPoint(this.obj.position, p2)
+}
+
+/**
+* Makes the actor move along the current rotation
+*/
+ACEX.Actor.prototype.moveForward = function(speed) {
+    this.obj.position.x += speed * Math.cos(this.obj.rotation)
+    this.obj.position.y += speed * Math.sin(this.obj.rotation)
 }
 
 ACEX.StageActor = function() {

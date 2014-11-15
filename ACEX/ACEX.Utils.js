@@ -16,6 +16,9 @@ ACEX.Utils = {
 	actorDistance: function(a1, a2) {
 		return ACEX.Utils.pointDistance(a1.obj.position, a2.obj.position)
 	},
+	angleToPoint: function(p1, p2) {
+		return Math.atan2((p2.y - p1.y),(p2.x - p1.x))
+	},
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color

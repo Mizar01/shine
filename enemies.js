@@ -30,7 +30,6 @@ Enemy.prototype.takeDamage = function(d) {
 Enemy.prototype.playerProximityControl = function() {
 	var pl = gameVars.player
 	if (ACEX.Utils.actorDistance(this, pl) < 5) {
-		console.log("aaaaahhhh")
 		gameVars.player.getDamage(this.damage * 10)
 		this.explode()
 	}
@@ -54,3 +53,37 @@ Bug = function(level, name) {
 	this.obj.endFill()
 }
 Bug.extends(Enemy, "Bug")
+
+Turret = function(level, x, y) {
+	Enemy.call(this, 1, "generic_turret")
+	this.obj = new PIXI.Graphics()
+	this.cooldown = new ACEX.CooldownTimer(4, true)
+	this.thresholdDist = 400  //if the target is far than that, don't shoot.
+	this.redraw()
+	this.obj.position.set(x, y)
+	this.target = gameVars.player
+} 
+
+Turret.extends(Enemy, "Turret")
+
+Turret.prototype.run = function() {
+	if (this.cooldown.trigger()) {
+		this.fire()
+	}
+	//this.radialFireDamageControl()
+	this.obj.rotation += 0.01
+}
+
+Turret.prototype.fire = function() {
+	var d = ACEX.Utils.actorDistance(this, this.target)
+	if (d < this.thresholdDist) {
+		gameLayer.addChild(new Bullet(this, this.target))
+	}
+}
+
+Turret.prototype.redraw = function() {
+	var o = this.obj
+	o.beginFill(0xff0000)
+	o.drawRect(-10, -10, 20, 20)
+	o.endFill()
+}

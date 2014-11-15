@@ -46,6 +46,8 @@ function define_game() {
 	//Adding a background grid
 	gameLayer.addChild(gameVars.grid = new Grid(100))
 	gameLayer.addChild(gameVars.player = new Player())
+	//Adding some random turrets in the map
+	setRandomTurrets()
 	setupHudLayer()
 	acex.run()
 }
@@ -61,5 +63,15 @@ function setupHudLayer() {
 	}
 	hudLayer.addChild(hudObjects.levelLabel)
 	hudLayer.addChild(hudObjects.lifeLabel)
+}
+
+function setRandomTurrets() {
+	var g = gameVars.grid
+	for (var i = 0; i < 50; i++) {
+		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
+		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
+		var lvl = ACEX.Utils.randInt(1, 4)
+		gameLayer.addChild(new Turret(lvl, rx, ry))
+	}
 }
 
