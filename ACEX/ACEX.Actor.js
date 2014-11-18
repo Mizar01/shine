@@ -3,10 +3,12 @@ ACEX.Actor = function() {
 	this.children = []
 	this.obj = null
     this.owner = null
+    this.paused = false
+    this.hitAreaObj = null //A separated hitAreaObj (sometimes is useful to have a separated object for this.)
 }
 
 ACEX.Actor.prototype.__run = function() {
-    if (this.alive) {
+    if (this.alive && !this.paused) {
         this.run()
         for (id in this.children) {
             var c = this.children[id]
@@ -17,6 +19,13 @@ ACEX.Actor.prototype.__run = function() {
             }
         }
     }      
+}
+
+ACEX.Actor.prototype.play = function() {
+    this.paused = false
+}
+ACEX.Actor.prototype.pause = function() {
+    this.paused = true
 }
 
 ACEX.Actor.prototype.addChild = function(a) {
@@ -73,6 +82,21 @@ ACEX.Actor.prototype.moveForward = function(speed) {
     this.obj.position.x += speed * Math.cos(this.obj.rotation)
     this.obj.position.y += speed * Math.sin(this.obj.rotation)
 }
+
+ACEX.Actor.prototype.setHitArea = function(x, y, w, h, pointer, callback) {
+    var o = this.obj
+    o.hitArea = new PIXI.Rectangle(x, y, w, h)
+    o.interactive = true
+    if (pointer) {
+        o.buttonMode = true
+    }
+    if (callback) {
+        o.mouseup = callback
+    }
+    this.obj._acex_actor = this
+
+}
+
 
 ACEX.StageActor = function() {
     ACEX.Actor.call(this)

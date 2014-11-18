@@ -53,7 +53,7 @@ ACEX = function(w, h, assets, callback) {
     this.canvasAlign = "center"
     this.canvasInit()
     this.loadAssets(assets, callback)
-    this.stageActor.obj.mouseup = function(){getAcex().events["mouseup"] = true}
+    //this.stageActor.obj.mouseup = function(){getAcex().events["mouseup"] = true}
     this.events = []
 }
 

@@ -9,43 +9,60 @@ gameVars.cameraShake = null
 
 
 var gameView
+var hitAreaLayer
 var gameLayer = null // ActorManager
 var hudLayer = null
 
 gameObjects = [] //globally accessible storage for some variable and objects
 hudObjects = []  //globally accessible storage for some variables and objects
 
-var pippo
 
 function init() {
-	new ACEX(1024, 768, ['resources/impact.fnt'], "define_game")
+	assets = [
+		'resources/impact.fnt',
+		'resources/options.png'
+	]
+	new ACEX(1024, 768, assets, "define_game")
 }
 
 function define_game() {
 
 	//Basic Structure 
 	//	gameView (containerActors and logics)
+	//      |----- mapHitAreaLayer (a single actor for a generic and fixed hit area layer)
 	//		|----- gameLayer  (actors and logics)
 	//		|----- hudLayer   (actors and logics)
 	//	otherView ...
 
 	// Main game View (composite of game layer plus HUD layer)
 	gameView = new ACEX.ContainerActor()
+	hitAreaLayer = new ACEX.ContainerActor()
+	// var o = new PIXI.Graphics()
+	// o.beginFill(0xff0000)
+	// o.drawRect(0,0, acex.sw, acex.sh)
+	// o.endFill()
+	// hitAreaLayer.obj.addChild(o)
+	hitAreaLayer.setHitArea(0, 0, acex.sw, acex.sh, false,
+		function(){gameVars.inGameMouse.setTarget()}
+	)
 	gameLayer = new ACEX.ContainerActor()
 	//put gameLayer in center position
 	gameLayer.center()
 	hudLayer = new ACEX.ContainerActor()
 	acex.stageActor.addChild(gameView)
+	gameView.addChild(hitAreaLayer)
 	gameView.addChild(gameLayer)
 	gameView.addChild(hudLayer)
-	gameView.addLogic(new InGameMouseLogic())
+	gameView.addLogic(gameVars.inGameMouse = new InGameMouseLogic())
 	gameView.addLogic(new RandomEnemyGenerator())
 	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
 	gameView.addLogic(gameVars.cameraMove = new CameraMoveLogic())
 
+
 	//Adding a background grid
 	gameLayer.addChild(gameVars.grid = new Grid(100))
 	gameLayer.addChild(gameVars.player = new Player())
+
 	//Adding some random turrets in the map
 	setRandomTurrets()
 	setupHudLayer()
@@ -61,8 +78,22 @@ function setupHudLayer() {
 	hudObjects.lifeLabel.update = function() {
 		this.updateText("Life " + gameVars.player.life)
 	}
+	hudObjects.optionsIcon = new ACEX.BText("", 0xffcc00, 40, acex.sh - 100, 
+		'resources/options.png', clickable = true)
+	hudObjects.optionsIcon.onMouseUp = function() {
+		if (gameView.paused) {
+			gameView.play()
+		}else {
+			gameView.pause()
+		}
+	}
+
+	hudLayer.addChild(hudObjects.optionsIcon)
 	hudLayer.addChild(hudObjects.levelLabel)
 	hudLayer.addChild(hudObjects.lifeLabel)
+
+
+
 }
 
 function setRandomTurrets() {

@@ -3,11 +3,7 @@ InGameMouseLogic = function() {
 }
 InGameMouseLogic.extends(ACEX.Logic, "InGameMouseLogic")
 
-InGameMouseLogic.prototype.run = function() {
-	if (acex.getEvent("mouseup")) {
-	    this.setTarget()
-	}
-}
+InGameMouseLogic.prototype.run = function() {}
 
 InGameMouseLogic.prototype.setTarget = function() {
 	if (targetCursor != null) {
