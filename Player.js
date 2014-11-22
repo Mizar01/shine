@@ -3,12 +3,12 @@ Player = function() {
 	this.name = "Player One"
 	this.life = 100
 	this.damage = 1
-	this.level = 5
+	this.level = 1
 	this.attackCooldown = 10
 	this.obj = new PIXI.Graphics()
 	this.obj.lineStyle(5, 0xaaaaff)
 	this.obj.drawCircle(0, 0, 10)
-	this.cooldown = new ACEX.CooldownTimer(Math.max(0.02, 0.2), false)
+	this.cooldown = new ACEX.CooldownTimer(4, false)
 	this.speed = 2
 	this.reaches = 0
 	this.radialFire = null
@@ -67,4 +67,11 @@ Player.prototype.levelUp = function() {
 Player.prototype.getDamage = function(d) {
 	this.life -= d
 	hudObjects.lifeLabel.update()
+}
+
+Player.prototype.upgradeRadialFireRate = function() {
+	var mt = this.cooldown.maxTime
+	mt -= 0.1
+	this.cooldown.maxTime = Math.max(0.2, mt)
+	console.log("Player upgraded radial fire")
 }

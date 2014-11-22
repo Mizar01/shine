@@ -13,7 +13,7 @@ var hitAreaLayer
 var gameLayer // ActorManager
 var hudLayer
 var gameMenuView
-var gameMenuLayer
+//var gameMenuLayer
 
 gameObjects = [] //globally accessible storage for some variable and objects
 hudObjects = []  //globally accessible storage for some variables and objects
@@ -76,16 +76,19 @@ function define_game() {
 	setRandomTurrets()
 	setupHudLayer()
 
-	//In Game Menu View
-	gameMenuView = new ACEX.ContainerActor()
-	gameMenuView.hideOnPause = true
-	gameMenuLayer = new ACEX.ContainerActor()
-	acex.stageActor.addChild(gameMenuView)
-	gameMenuView.addChild(gameMenuLayer)
-	setupGameMenus()
+	// //In Game Menu View
+	// gameMenuView = new ACEX.ContainerActor()
+	// gameMenuView.hideOnPause = true
+	// gameMenuLayer = new ACEX.ContainerActor()
+	// acex.stageActor.addChild(gameMenuView)
+	// gameMenuView.addChild(gameMenuLayer)
+	// setupGameMenus()
+
+	//Repositioning html menus
+	MenuTools.center("gameMenu")
 
 	gameView.play()
-	gameMenuView.pause()
+	// gameMenuView.pause()
 
 	acex.run()
 }
@@ -103,12 +106,13 @@ function setupHudLayer() {
 		'resources/options.png', clickable = true)
 	hudObjects.optionsIcon.onMouseUp = function() {
 		if (gameView.paused) {
-			gameMenuView.pause()
+			//gameMenuView.pause()
+			MenuTools.hideGameMenu()
 			gameView.play()
 
 		}else {
 			gameView.pause()
-			gameMenuView.play()
+			MenuTools.showGameMenu()
 
 		}
 	}
@@ -131,9 +135,9 @@ function setRandomTurrets() {
 	}
 }
 
-function setupGameMenus() {
-	gameVars.gameMenu = new ACEX.Window("Game Menu", 400,  300)
-	gameVars.gameMenu.center()
-	gameMenuLayer.addChild(gameVars.gameMenu)
-}
+// function setupGameMenus() {
+// 	gameVars.gameMenu = new ACEX.Window("Game Menu", 400,  300)
+// 	gameVars.gameMenu.center()
+// 	gameMenuLayer.addChild(gameVars.gameMenu)
+// }
 

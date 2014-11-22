@@ -19,6 +19,14 @@ ACEX.Utils = {
 	angleToPoint: function(p1, p2) {
 		return Math.atan2((p2.y - p1.y),(p2.x - p1.x))
 	},
+	/**
+	*	Returns a float number with a maximum of decimals limited by precision.
+	*   For example n = 2.345533 and precision = 2 will return: 2.35
+	*/
+	roundFloat: function(n, precision) {
+		var p = Math.pow(10, precision)
+		return Math.round(n * p) / p
+	},
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color

@@ -1,8 +1,7 @@
 <html>
-<head>
-      <script src="pixi.js"></script>
-
+<head>     
       <!-- ACEX libraries -->
+      <script src="pixi.js"></script>
       <script src="ACEX/ACEX.js"></script>
       <script src="ACEX/THREE.Clock.js"></script>
       <script src="ACEX/ACEX.TimeManager.js"></script>
@@ -12,6 +11,8 @@
       <script src="ACEX/ACEX.Window.js"></script>
       <script src="ACEX/ACEX.BText.js"></script>
       <!-- Game related libraries -->
+      <script src="jquery-2.1.1.min.js"></script>
+      <script src="htmlMenuManager.js"></script>
       <script src="Player.js"></script>
       <script src="TargetCursor.js"></script>
       <script src="RadialFire.js"></script>
@@ -24,5 +25,16 @@
       <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body onload="init()">
+      <div id="gameMenu" class="acex acexHtmlWindow">
+            <h3>Game Menu</h3>
+            <div id="gameMenu_content">
+                  <div>Level : <span id="gameMenu_level"/></div>
+                  <div>Exp   : </span id="gameMenu_exp"/></div>
+                  <div>
+                        <span class="acexHtmlButton" onclick="MenuTools.upgradeRadialFireRate()">Upgrade Radial Fire Rate</span>
+                         - Rate : <span id="gameMenu_radialFireRate"/>/s
+                  </div> 
+            </div>
+      </div>
 </body>
 </html>
