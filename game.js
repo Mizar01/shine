@@ -10,8 +10,10 @@ gameVars.cameraShake = null
 
 var gameView
 var hitAreaLayer
-var gameLayer = null // ActorManager
-var hudLayer = null
+var gameLayer // ActorManager
+var hudLayer
+var gameMenuView
+var gameMenuLayer
 
 gameObjects = [] //globally accessible storage for some variable and objects
 hudObjects = []  //globally accessible storage for some variables and objects
@@ -32,7 +34,8 @@ function define_game() {
 	//      |----- mapHitAreaLayer (a single actor for a generic and fixed hit area layer)
 	//		|----- gameLayer  (actors and logics)
 	//		|----- hudLayer   (actors and logics)
-	//	otherView ...
+	//	inGameMenuView ...
+	//      |----- menuLayer 
 
 	// Main game View (composite of game layer plus HUD layer)
 	gameView = new ACEX.ContainerActor()
@@ -43,7 +46,11 @@ function define_game() {
 	// o.endFill()
 	// hitAreaLayer.obj.addChild(o)
 	hitAreaLayer.setHitArea(0, 0, acex.sw, acex.sh, false,
-		function(){gameVars.inGameMouse.setTarget()}
+		function(){
+			if (!gameView.paused) {
+				gameVars.inGameMouse.setTarget()
+			}
+		}
 	)
 	gameLayer = new ACEX.ContainerActor()
 	//put gameLayer in center position
@@ -53,6 +60,8 @@ function define_game() {
 	gameView.addChild(hitAreaLayer)
 	gameView.addChild(gameLayer)
 	gameView.addChild(hudLayer)
+
+
 	gameView.addLogic(gameVars.inGameMouse = new InGameMouseLogic())
 	gameView.addLogic(new RandomEnemyGenerator())
 	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
@@ -66,11 +75,23 @@ function define_game() {
 	//Adding some random turrets in the map
 	setRandomTurrets()
 	setupHudLayer()
+
+	//In Game Menu View
+	gameMenuView = new ACEX.ContainerActor()
+	gameMenuView.hideOnPause = true
+	gameMenuLayer = new ACEX.ContainerActor()
+	acex.stageActor.addChild(gameMenuView)
+	gameMenuView.addChild(gameMenuLayer)
+	setupGameMenus()
+
+	gameView.play()
+	gameMenuView.pause()
+
 	acex.run()
 }
 
 function setupHudLayer() {
-	hudObjects.levelLabel = new ACEX.BText("Level 1", 0xffaa00, 40, 40)
+	hudObjects.levelLabel = new ACEX.BText("Level " + gameVars.player.level, 0xffaa00, 40, 40)
 	hudObjects.levelLabel.update = function() {
 		this.updateText("Level " + gameVars.player.level)
 	}
@@ -82,9 +103,13 @@ function setupHudLayer() {
 		'resources/options.png', clickable = true)
 	hudObjects.optionsIcon.onMouseUp = function() {
 		if (gameView.paused) {
+			gameMenuView.pause()
 			gameView.play()
+
 		}else {
 			gameView.pause()
+			gameMenuView.play()
+
 		}
 	}
 
@@ -104,5 +129,11 @@ function setRandomTurrets() {
 		var lvl = ACEX.Utils.randInt(1, 4)
 		gameLayer.addChild(new Turret(lvl, rx, ry))
 	}
+}
+
+function setupGameMenus() {
+	gameVars.gameMenu = new ACEX.Window("Game Menu", 400,  300)
+	gameVars.gameMenu.center()
+	gameMenuLayer.addChild(gameVars.gameMenu)
 }
 

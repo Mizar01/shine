@@ -30,7 +30,7 @@ Player.prototype.run = function() {
 Player.prototype.moveTowardTargetPoint = function() {
 	var p1 = this.obj.position
 	var p2 = targetCursor.obj.position
-	if (ACEX.Utils.pointDistance(p1, p2) < 2) {
+	if (ACEX.Utils.pointDistance(p1, p2) <= this.speed) {
 		targetCursor.setForRemoval()
 		targetCursor = null
 		this.reaches++
@@ -59,6 +59,8 @@ Player.prototype.setRandomPosition = function(topPos) {
 
 Player.prototype.levelUp = function() {
 	this.level++
+	this.damage = this.level * 1.2
+	this.speed = this.level * 1.3
 	hudObjects.levelLabel.update()
 }
 

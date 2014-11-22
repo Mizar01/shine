@@ -1,7 +1,11 @@
-ACEX.BText = function(text, color, px, py, icon, clickable) {
+ACEX.BText = function(text, color, px, py, icon, clickable, style) {
 	ACEX.Actor.call(this);
 	this.obj = new PIXI.DisplayObjectContainer()
 	this.obj.position.set(px, py)
+	this.style = style || {
+		"size": "35px",
+		"font": "Impact",
+	}
 	this.textObj = this.drawText(text, color)
 	this.obj.addChild(this.textObj)
 	if (icon) {
@@ -22,6 +26,7 @@ ACEX.BText = function(text, color, px, py, icon, clickable) {
 		// this.obj.hitArea = new PIXI.Rectangle(0, 0, 40, 40)
 		// this.obj.mouseup = function(){this._acex_actor.onMouseUp()}
 	}
+
 }
 
 ACEX.BText.extends(ACEX.Actor, "ACEX.BText")
@@ -39,7 +44,8 @@ ACEX.BText.prototype.onMouseUp = function() {
 }
 
 ACEX.BText.prototype.drawText = function(text, color) {
-	var o = new PIXI.BitmapText("",  {font: "35px Impact", align: "right", })
+	var s = this.style
+	var o = new PIXI.BitmapText("",  {font: s.size + " " + s.font, align: "right", })
 	o.tint = color
 	o.setText(text)
 	return o

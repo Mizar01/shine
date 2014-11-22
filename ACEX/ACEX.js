@@ -12,13 +12,13 @@ Function.prototype.extends = function(baseClass, typeName) {
     //The superClass must be used in a static way
     // example: XXX.Object.superClass.method.call(instance,params)  
     // DON'T USE superClass with 'this' identifier.
-    // Use this.getSuperClass instead
-    this.superClass = baseClass.prototype //(USE WITH CAUTION : VERY DANGEROUS)
+    // ---->   Use this.getSuperClass instead !!!!! <-----
+    this.superClass = baseClass.prototype //(USE WITH CAUTION : VERY DANGEROUS, use this.getSuperClass())
 
     this.prototype.type = typeName
 
     this.prototype.getSuperClass = function() {
-        return eval(this.getType() + ".superClass")
+        return eval(this.type + ".superClass")
     }
 
 }

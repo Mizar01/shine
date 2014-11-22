@@ -70,7 +70,7 @@ Turret.prototype.run = function() {
 	if (this.cooldown.trigger()) {
 		this.fire()
 	}
-	//this.radialFireDamageControl()
+	this.radialFireDamageControl()
 	this.obj.rotation += 0.01
 }
 

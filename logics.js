@@ -35,7 +35,8 @@ RandomEnemyGenerator.prototype.spawnEnemy = function() {
 	var a = ACEX.Utils.randFloat(0, Math.PI * 2)
 	rx = gameVars.player.obj.x + Math.cos(a) * d
 	ry = gameVars.player.obj.y + Math.sin(a) * d
-	var lvl = ACEX.Utils.randInt(1, 6)
+	var plevel = gameVars.player.level
+	var lvl = ACEX.Utils.randInt(Math.max(1, plevel - 3), plevel + 5)
 	var e = new Bug(lvl)
 	e.obj.position.set(rx, ry)
 	gameLayer.addChild(e)
@@ -85,6 +86,7 @@ CameraMoveLogic = function() {
 	this.absoluteCenter = new PIXI.Point(acex.sw/2, acex.sh/2)
 	this.worldPosition = gameLayer.obj.position.clone() 
 	this.boxSpan = new PIXI.Point(160, 120) //the thresholds of width and height
+	this.speed = 0.02
 	// this.drawTestBoundingBox()
 }
 CameraMoveLogic.extends(ACEX.Logic, "CameraMoveLogic")
@@ -92,9 +94,9 @@ CameraMoveLogic.extends(ACEX.Logic, "CameraMoveLogic")
 CameraMoveLogic.prototype.run = function() {
 	var diff = this.playerDiffs()
 	//console.log(diff)
-	if (diff.x != 0 || diff.y != 0) {
-		this.worldPosition.x -= diff.x * 0.02
-		this.worldPosition.y -= diff.y * 0.02
+	if (Math.abs(diff.x) + Math.abs(diff.y) > this.speed * 4) {
+		this.worldPosition.x -= diff.x * this.speed
+		this.worldPosition.y -= diff.y * this.speed
 		gameLayer.obj.position = this.worldPosition.clone()
 	}
 }

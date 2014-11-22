@@ -5,6 +5,7 @@ ACEX.Actor = function() {
     this.owner = null
     this.paused = false
     this.hitAreaObj = null //A separated hitAreaObj (sometimes is useful to have a separated object for this.)
+    this.hideOnPause = false
 }
 
 ACEX.Actor.prototype.__run = function() {
@@ -23,9 +24,23 @@ ACEX.Actor.prototype.__run = function() {
 
 ACEX.Actor.prototype.play = function() {
     this.paused = false
+    if (this.hideOnPause) {
+        this.show()
+    }
 }
 ACEX.Actor.prototype.pause = function() {
     this.paused = true
+    if (this.hideOnPause) {
+        this.hide()
+    }
+}
+
+ACEX.Actor.prototype.show = function() {
+    this.obj.visible = true
+}
+
+ACEX.Actor.prototype.hide = function() {
+    this.obj.visible = false
 }
 
 ACEX.Actor.prototype.addChild = function(a) {
@@ -53,6 +68,8 @@ ACEX.Actor.prototype.initObj = function() {}
 ACEX.Actor.prototype.run = function() {}
 
 ACEX.Actor.prototype.center = function() {
+    // TODO : this actually works only for direct children of stage
+    // or for chilren of parents positioned in 0,0 and unscaled.
     this.obj.position.set(getAcex().sw/2, getAcex().sh/2)
 }
 
