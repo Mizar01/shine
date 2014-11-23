@@ -45,13 +45,12 @@ function define_game() {
 	// o.drawRect(0,0, acex.sw, acex.sh)
 	// o.endFill()
 	// hitAreaLayer.obj.addChild(o)
-	hitAreaLayer.setHitArea(0, 0, acex.sw, acex.sh, false,
-		function(){
+	hitAreaLayer.setRectHitArea(0, 0, acex.sw, acex.sh, false)
+	hitAreaLayer.mouseup = function() {
 			if (!gameView.paused) {
 				gameVars.inGameMouse.setTarget()
-			}
-		}
-	)
+			}		
+	}
 	gameLayer = new ACEX.ContainerActor()
 	//put gameLayer in center position
 	gameLayer.center()
@@ -73,7 +72,7 @@ function define_game() {
 	gameLayer.addChild(gameVars.player = new Player())
 
 	//Adding some random turrets in the map
-	setRandomTurrets()
+	setObjects()
 	setupHudLayer()
 
 	// //In Game Menu View
@@ -94,7 +93,7 @@ function define_game() {
 }
 
 function setupHudLayer() {
-	hudObjects.levelLabel = new ACEX.BText("Level " + gameVars.player.level, 0xffaa00, 40, 40)
+	hudObjects.levelLabel = new ACEX.BText("Level " + gameVars.player.level, 0xffaa00, 40, 40, null, clickable = true)
 	hudObjects.levelLabel.update = function() {
 		this.updateText("Level " + gameVars.player.level)
 	}
@@ -104,7 +103,7 @@ function setupHudLayer() {
 	}
 	hudObjects.optionsIcon = new ACEX.BText("", 0xffcc00, 40, acex.sh - 100, 
 		'resources/options.png', clickable = true)
-	hudObjects.optionsIcon.onMouseUp = function() {
+	hudObjects.optionsIcon.mouseup = function() {
 		if (gameView.paused) {
 			//gameMenuView.pause()
 			MenuTools.hideGameMenu()
@@ -125,7 +124,7 @@ function setupHudLayer() {
 
 }
 
-function setRandomTurrets() {
+function setObjects() {
 	var g = gameVars.grid
 	for (var i = 0; i < 50; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
@@ -133,6 +132,19 @@ function setRandomTurrets() {
 		var lvl = ACEX.Utils.randInt(1, 4)
 		gameLayer.addChild(new Turret(lvl, rx, ry))
 	}
+	var g = gameVars.grid
+	for (var i = 0; i < 20; i++) {
+		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
+		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
+		var lvl = ACEX.Utils.randInt(1, 4)
+		gameLayer.addChild(new Npc(GameUtils.randomName(), rx, ry))
+	}
+	gameLayer.addChild(new Npc(GameUtils.randomName(), 
+		gameVars.player.obj.position.x + 100, 
+		gameVars.player.obj.position.y
+		)
+	)
+
 }
 
 // function setupGameMenus() {

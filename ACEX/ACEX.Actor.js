@@ -21,7 +21,6 @@ ACEX.Actor.prototype.__run = function() {
         }
     }      
 }
-
 ACEX.Actor.prototype.play = function() {
     this.paused = false
     if (this.hideOnPause) {
@@ -100,19 +99,28 @@ ACEX.Actor.prototype.moveForward = function(speed) {
     this.obj.position.y += speed * Math.sin(this.obj.rotation)
 }
 
-ACEX.Actor.prototype.setHitArea = function(x, y, w, h, pointer, callback) {
+ACEX.Actor.prototype.addHitAreaObj = function(hitAreaObj, pointer) {
     var o = this.obj
-    o.hitArea = new PIXI.Rectangle(x, y, w, h)
+    this.obj.hitArea = hitAreaObj
     o.interactive = true
     if (pointer) {
         o.buttonMode = true
     }
-    if (callback) {
-        o.mouseup = callback
+    this.obj._acex_actor = this    
+    o.mouseup = function() {
+        this._acex_actor.mouseup()
     }
-    this.obj._acex_actor = this
-
 }
+
+ACEX.Actor.prototype.setRectHitArea = function(x, y, w, h, pointer) {
+    this.addHitAreaObj(new PIXI.Rectangle(x, y, w, h), pointer)
+}
+ACEX.Actor.prototype.setCircleHitArea = function(x, y, r, pointer) {
+    this.addHitAreaObj(new PIXI.Circle(x, y, r), pointer)
+}
+
+
+
 
 
 ACEX.StageActor = function() {

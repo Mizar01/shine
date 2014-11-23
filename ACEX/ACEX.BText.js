@@ -17,9 +17,7 @@ ACEX.BText = function(text, color, px, py, icon, clickable, style) {
 	}
 	test_var = this
 	if (clickable) {
-		this.setHitArea(0, 0, 40, 40, true, 
-			function(){this._acex_actor.onMouseUp()}
-		)
+		this.setRectHitArea(0, 0, 40, 40, true)
 		// 
 		// this.obj.buttonMode = true
 		// this.obj.interactive = true
@@ -39,8 +37,8 @@ ACEX.BText.prototype.updateText = function(text) {
 
 ACEX.BText.prototype.update = function() {}
 
-ACEX.BText.prototype.onMouseUp = function() {
-	console.log("No event defined for ", this)
+ACEX.BText.prototype.mouseup = function() {
+	console.warn("The Object is set to clickable, but you must write your own mouseup behavior", this)
 }
 
 ACEX.BText.prototype.drawText = function(text, color) {
