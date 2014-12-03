@@ -36,7 +36,8 @@ RandomEnemyGenerator.prototype.spawnEnemy = function() {
 	rx = gameVars.player.obj.x + Math.cos(a) * d
 	ry = gameVars.player.obj.y + Math.sin(a) * d
 	var plevel = gameVars.player.level
-	var lvl = ACEX.Utils.randInt(Math.max(1, plevel - 3), plevel + 5)
+	var lvl = ACEX.Utils.randInt(Math.max(1, plevel - 3), plevel + 1)
+	// var lvl = 1
 	var e = new Bug(lvl)
 	e.obj.position.set(rx, ry)
 	gameLayer.addChild(e)

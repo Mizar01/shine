@@ -1,7 +1,7 @@
 RadialFire = function(owner) {
 	ACEX.Actor.call(this);
-	this.damage = owner.damage
-	this.maxRadius = owner.level * 36
+	this.damage = owner.level * 1.2
+	this.maxRadius = 90 + owner.level * 1.5
 	this.radius = 3
 	this.obj = new PIXI.Graphics()
 	this.redraw(5)

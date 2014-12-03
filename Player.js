@@ -4,13 +4,15 @@ Player = function() {
 	this.life = 100
 	this.damage = 1
 	this.level = 1
+	this.xp = 0
+	this.nextLevelXp = 100
 	this.attackCooldown = 10
 	this.obj = new PIXI.Graphics()
 	this.obj.lineStyle(5, 0xaaaaff)
 	this.obj.drawCircle(0, 0, 10)
 	this.cooldown = new ACEX.CooldownTimer(4, false)
 	this.speed = 2
-	this.reaches = 0
+	this.reaches = 0 //only for test and fast level advance
 	this.radialFire = null
 }
 
@@ -36,7 +38,7 @@ Player.prototype.moveTowardTargetPoint = function() {
 		this.reaches++
 		if (this.reaches >= 3) {
 			this.reaches = 0
-			this.levelUp()
+			//this.levelUp()
 		}
 	}else {
 		var angle = Math.atan2((p2.y - p1.y),(p2.x - p1.x))
@@ -62,6 +64,9 @@ Player.prototype.levelUp = function() {
 	this.damage = this.level * 1.2
 	this.speed = this.level * 1.3
 	hudObjects.levelLabel.update()
+
+	this.nextLevelXp = 100 + this.level * 55
+	hudObjects.xpLabel.update()
 }
 
 Player.prototype.getDamage = function(d) {
@@ -74,4 +79,13 @@ Player.prototype.upgradeRadialFireRate = function() {
 	mt -= 0.1
 	this.cooldown.maxTime = Math.max(0.2, mt)
 	console.log("Player upgraded radial fire")
+}
+
+Player.prototype.addXp = function(xp) {
+	this.xp += xp
+	hudObjects.xpLabel.update()
+	if (this.xp >= this.nextLevelXp) {
+		this.xp = 0
+		this.levelUp()
+	}
 }

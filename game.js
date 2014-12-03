@@ -97,7 +97,11 @@ function setupHudLayer() {
 	hudObjects.levelLabel.update = function() {
 		this.updateText("Level " + gameVars.player.level)
 	}
-	hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 200, 40)
+	hudObjects.xpLabel = new ACEX.BText("EXP " + "0/100", 0x00aa00, 200, 40)
+	hudObjects.xpLabel.update = function() {
+		this.updateText("EXP " + gameVars.player.xp + "/" + gameVars.player.nextLevelXp)
+	}
+	hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 400, 40)
 	hudObjects.lifeLabel.update = function() {
 		this.updateText("Life " + gameVars.player.life)
 	}
@@ -118,7 +122,9 @@ function setupHudLayer() {
 
 	hudLayer.addChild(hudObjects.optionsIcon)
 	hudLayer.addChild(hudObjects.levelLabel)
+	hudLayer.addChild(hudObjects.xpLabel)
 	hudLayer.addChild(hudObjects.lifeLabel)
+
 
 
 
@@ -126,22 +132,29 @@ function setupHudLayer() {
 
 function setObjects() {
 	var g = gameVars.grid
+	var p = gameVars.player
+	// Adding some turrets
 	for (var i = 0; i < 50; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
 		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
 		var lvl = ACEX.Utils.randInt(1, 4)
 		gameLayer.addChild(new Turret(lvl, rx, ry))
 	}
-	var g = gameVars.grid
+	//Adding some npcs
 	for (var i = 0; i < 20; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
 		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
 		var lvl = ACEX.Utils.randInt(1, 4)
 		gameLayer.addChild(new Npc(GameUtils.randomName(), rx, ry))
 	}
+	//Adding a test enemyspawner
+	gameLayer.addChild(new EnemySpawner(p.obj.position.x, p.obj.position.y + 300, 5))
+
+
+	//Adding an npc near the player
 	gameLayer.addChild(new Npc(GameUtils.randomName(), 
-		gameVars.player.obj.position.x + 100, 
-		gameVars.player.obj.position.y
+		p.obj.position.x + 100, 
+		p.obj.position.y
 		)
 	)
 
