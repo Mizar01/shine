@@ -8,9 +8,10 @@ Player = function() {
 	this.nextLevelXp = 100
 	this.attackCooldown = 10
 	this.obj = new PIXI.Graphics()
-	this.obj.lineStyle(5, 0xaaaaff)
+	this.obj.lineStyle(3, 0xaaaaff)
 	this.obj.drawCircle(0, 0, 10)
-	this.cooldown = new ACEX.CooldownTimer(4, false)
+	this.cooldown = new ACEX.CooldownTimer(2, true)
+	this.radialCooldown = new ACEX.CooldownTimer(30, false)
 	this.speed = 2
 	this.reaches = 0 //only for test and fast level advance
 	this.radialFire = null
@@ -22,10 +23,14 @@ Player.prototype.run = function() {
 	if (targetCursor != null) {
 		this.moveTowardTargetPoint()
 	}
-	if (this.radialFire == null && this.cooldown.trigger()) {
+	if (this.radialFire == null && this.radialCooldown.trigger()) {
 		this.radialFire = new RadialFire(this)
 		this.addChild(this.radialFire)
-		this.cooldown.restart()
+		this.radialCooldown.restart()
+	}
+
+	if (this.cooldown.trigger() && gameVars.nearestEnemy != null &&	gameVars.nearestEnemy.alive) {
+		gameLayer.addChild(new Bullet(this, gameVars.nearestEnemy))
 	}
 }
 
@@ -69,7 +74,7 @@ Player.prototype.levelUp = function() {
 	hudObjects.xpLabel.update()
 }
 
-Player.prototype.getDamage = function(d) {
+Player.prototype.takeDamage = function(d) {
 	this.life -= d
 	hudObjects.lifeLabel.update()
 }

@@ -110,11 +110,22 @@ Enemy.prototype.addPlayerExperience = function() {
 
 Enemy.prototype.playerProximityControl = function() {
 	var pl = gameVars.player
-	if (ACEX.Utils.actorDistance(this, pl) < 5) {
-		gameVars.player.getDamage(this.damage * 10)
+	var d = ACEX.Utils.actorDistance(this, pl)
+	if (d < 5) {
+		gameVars.player.takeDamage(this.damage * 10)
 		this.explode()
 	}
+	this.verifyNearestEnemy(d)
 }
+
+Enemy.prototype.verifyNearestEnemy = function(d) {
+	var ne = gameVars.nearestEnemy
+	var p = gameVars.player
+	if (!ne || (ne && ACEX.Utils.actorDistance(ne, p) > d)) {
+		gameVars.nearestEnemy = this
+	}
+}
+
 Enemy.prototype.explode = function() {
 	gameLayer.addChild(new Explosion(20, this.obj.position))
 	this.setForRemoval()

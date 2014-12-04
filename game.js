@@ -46,11 +46,12 @@ function define_game() {
 	// o.endFill()
 	// hitAreaLayer.obj.addChild(o)
 	hitAreaLayer.setRectHitArea(0, 0, acex.sw, acex.sh, false)
-	hitAreaLayer.mouseup = function() {
+	hitAreaLayer.mouseup = function(posdata) {
 			if (!gameView.paused) {
-				gameVars.inGameMouse.setTarget()
+				gameVars.interactLogic.setTarget(posdata)
 			}		
 	}
+
 	gameLayer = new ACEX.ContainerActor()
 	//put gameLayer in center position
 	gameLayer.center()
@@ -61,7 +62,7 @@ function define_game() {
 	gameView.addChild(hudLayer)
 
 
-	gameView.addLogic(gameVars.inGameMouse = new InGameMouseLogic())
+	gameView.addLogic(gameVars.interactLogic = new InteractLogic())
 	gameView.addLogic(new RandomEnemyGenerator())
 	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
 	gameView.addLogic(gameVars.cameraMove = new CameraMoveLogic())

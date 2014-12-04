@@ -1,16 +1,16 @@
-InGameMouseLogic = function() {
+InteractLogic = function() {
 	ACEX.Logic.call(this)
 }
-InGameMouseLogic.extends(ACEX.Logic, "InGameMouseLogic")
+InteractLogic.extends(ACEX.Logic, "InteractLogic")
 
-InGameMouseLogic.prototype.run = function() {}
+InteractLogic.prototype.run = function() {}
 
-InGameMouseLogic.prototype.setTarget = function() {
+InteractLogic.prototype.setTarget = function(posdata) {
 	if (targetCursor != null) {
 		targetCursor.setForRemoval()
 		targetCursor = null
 	}
-	targetCursor = new TargetCursor(acex.getMousePoint(gameLayer))
+	targetCursor = new TargetCursor(acex.getMousePoint(gameLayer, posdata))
 	gameLayer.addChild(targetCursor)
 }
 

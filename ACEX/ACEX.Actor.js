@@ -107,8 +107,8 @@ ACEX.Actor.prototype.addHitAreaObj = function(hitAreaObj, pointer) {
         o.buttonMode = true
     }
     this.obj._acex_actor = this    
-    o.mouseup = function() {
-        this._acex_actor.mouseup()
+    o.mouseup = o.tap = function(pdata) {
+        this._acex_actor.mouseup(pdata)
     }
 }
 

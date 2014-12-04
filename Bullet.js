@@ -1,7 +1,7 @@
 Bullet = function(shooter, target) {
 	ACEX.Actor.call(this)
 	this.shooter = shooter
-	this.damage = shooter.damage
+	this.damage = shooter.level * 5
 	this.target = target
 	this.obj = new PIXI.Graphics()
 	this.speed = 2
@@ -24,10 +24,10 @@ Bullet.prototype.run = function() {
 Bullet.prototype.targetControl = function() {
 	var d = ACEX.Utils.actorDistance(this, this.target)
 	if (d < 5) {
-		if (this.target.getDamage) {
-			this.target.getDamage(this.damage)
+		if (this.target.takeDamage) {
+			this.target.takeDamage(this.damage)
 		}else {
-			console.warn("Non getDamage method for target class = " + this.target.type)
+			console.warn("Non takeDamage method for target class = " + this.target.type)
 		}
 		this.setForRemoval()
 	}

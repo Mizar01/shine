@@ -97,9 +97,17 @@ ACEX.prototype.getEvent = function(event) {
 /**
 * Get the mouse position in relative coords given the actor.
 * If the actor is not given, the stageActor will be considered (real mouse position)
+* If the positionData object is not null, this is used to define the position instead of
+* the current mouse position
 */
-ACEX.prototype.getMousePoint = function(relActor) {
-    var mp = this.stageActor.obj.getMousePosition().clone()
+ACEX.prototype.getMousePoint = function(relActor, positionData) {
+    console.log(mp)
+    var mp = null
+    if (positionData != null) {
+        mp = positionData.global
+    }else {
+        mp = this.stageActor.obj.getMousePosition().clone()
+    }
     if (relActor) {
         return new PIXI.Point(mp.x - relActor.obj.x, mp.y - relActor.obj.y)
     }else {
