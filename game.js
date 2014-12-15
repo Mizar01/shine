@@ -98,14 +98,28 @@ function setupHudLayer() {
 	hudObjects.levelLabel.update = function() {
 		this.updateText("Level " + gameVars.player.level)
 	}
-	hudObjects.xpLabel = new ACEX.BText("EXP " + "0/100", 0x00aa00, 200, 40)
-	hudObjects.xpLabel.update = function() {
-		this.updateText("EXP " + gameVars.player.xp + "/" + gameVars.player.nextLevelXp)
-	}
-	hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 400, 40)
-	hudObjects.lifeLabel.update = function() {
-		this.updateText("Life " + gameVars.player.life)
-	}
+	// hudObjects.xpLabel = new ACEX.BText("EXP " + "0/100", 0x00aa00, 200, 40)
+	// hudObjects.xpLabel.update = function() {
+	// 	this.updateText("EXP " + gameVars.player.xp + "/" + gameVars.player.nextLevelXp)
+	// }
+
+	hudObjects.xpBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.03, acex.sw * 0.25, acex.sh * 0.02, 
+		function() {
+			return [gameVars.player.xp, gameVars.player.nextLevelXp]
+		})
+
+
+	// hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 400, 40)
+	// hudObjects.lifeLabel.update = function() {
+	// 	this.updateText("Life " + gameVars.player.life)
+	// }
+
+	hudObjects.lifeBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.08, acex.sw * 0.25, acex.sh * 0.03,
+		function() {
+			return [gameVars.player.life, gameVars.player.maxLife]
+		},
+		true, 0.3)
+
 	hudObjects.optionsIcon = new ACEX.BText("", 0xffcc00, 40, acex.sh - 100, 
 		'resources/options.png', clickable = true)
 	hudObjects.optionsIcon.mouseup = function() {
@@ -123,8 +137,10 @@ function setupHudLayer() {
 
 	hudLayer.addChild(hudObjects.optionsIcon)
 	hudLayer.addChild(hudObjects.levelLabel)
-	hudLayer.addChild(hudObjects.xpLabel)
-	hudLayer.addChild(hudObjects.lifeLabel)
+	// hudLayer.addChild(hudObjects.xpLabel)
+	hudLayer.addChild(hudObjects.xpBar)
+	// hudLayer.addChild(hudObjects.lifeLabel)
+	hudLayer.addChild(hudObjects.lifeBar)
 
 
 

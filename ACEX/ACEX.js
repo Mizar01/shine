@@ -101,7 +101,6 @@ ACEX.prototype.getEvent = function(event) {
 * the current mouse position
 */
 ACEX.prototype.getMousePoint = function(relActor, positionData) {
-    console.log(mp)
     var mp = null
     if (positionData != null) {
         mp = positionData.global

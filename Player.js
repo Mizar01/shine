@@ -2,6 +2,7 @@ Player = function() {
 	ACEX.Actor.call(this);
 	this.name = "Player One"
 	this.life = 100
+	this.maxLife = this.life
 	this.damage = 1
 	this.level = 1
 	this.xp = 0
@@ -15,6 +16,7 @@ Player = function() {
 	this.speed = 2
 	this.reaches = 0 //only for test and fast level advance
 	this.radialFire = null
+	this.shootRadius = 100
 }
 
 Player.extends(ACEX.Actor, "Player")
@@ -29,7 +31,10 @@ Player.prototype.run = function() {
 		this.radialCooldown.restart()
 	}
 
-	if (this.cooldown.trigger() && gameVars.nearestEnemy != null &&	gameVars.nearestEnemy.alive) {
+	if (this.cooldown.trigger() && 
+		gameVars.nearestEnemy != null &&
+		gameVars.nearestEnemy.alive &&
+		gameVars.nearestEnemyDistance <= this.shootRadius) {
 		gameLayer.addChild(new Bullet(this, gameVars.nearestEnemy))
 	}
 }
@@ -68,15 +73,18 @@ Player.prototype.levelUp = function() {
 	this.level++
 	this.damage = this.level * 1.2
 	this.speed = this.level * 1.3
-	hudObjects.levelLabel.update()
+	this.shootRadius = 100 + this.level * 1.4
+	this.maxLife = 100 + this.level * 1.5
+	this.life = this.maxLife
+	// hudObjects.levelLabel.update()
 
 	this.nextLevelXp = 100 + this.level * 55
-	hudObjects.xpLabel.update()
+	// hudObjects.xpLabel.update()
 }
 
 Player.prototype.takeDamage = function(d) {
-	this.life -= d
-	hudObjects.lifeLabel.update()
+	this.life = Math.max(0, this.life - d)
+	// hudObjects.lifeLabel.update()
 }
 
 Player.prototype.upgradeRadialFireRate = function() {
@@ -88,7 +96,7 @@ Player.prototype.upgradeRadialFireRate = function() {
 
 Player.prototype.addXp = function(xp) {
 	this.xp += xp
-	hudObjects.xpLabel.update()
+	// hudObjects.xpLabel.update()
 	if (this.xp >= this.nextLevelXp) {
 		this.xp = 0
 		this.levelUp()

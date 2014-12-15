@@ -112,7 +112,7 @@ Enemy.prototype.playerProximityControl = function() {
 	var pl = gameVars.player
 	var d = ACEX.Utils.actorDistance(this, pl)
 	if (d < 5) {
-		gameVars.player.takeDamage(this.damage * 10)
+		gameVars.player.takeDamage(this.damage * 3)
 		this.explode()
 	}
 	this.verifyNearestEnemy(d)
@@ -121,8 +121,9 @@ Enemy.prototype.playerProximityControl = function() {
 Enemy.prototype.verifyNearestEnemy = function(d) {
 	var ne = gameVars.nearestEnemy
 	var p = gameVars.player
-	if (!ne || (ne && ACEX.Utils.actorDistance(ne, p) > d)) {
+	if (!ne || !ne.alive || (ne && gameVars.nearestEnemyDistance > d)) {
 		gameVars.nearestEnemy = this
+		gameVars.nearestEnemyDistance = d
 	}
 }
 

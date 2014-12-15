@@ -1,3 +1,7 @@
+
+// TODO : BText need an auto refresh timer. It's too complicated call this object from other entities and 
+// track where I am using it. It's better to go like ACEX.Bar with a refreshTimer (and eventually stop the timer)
+
 ACEX.BText = function(text, color, px, py, icon, clickable, style) {
 	ACEX.Actor.call(this);
 	this.obj = new PIXI.DisplayObjectContainer()
@@ -8,6 +12,7 @@ ACEX.BText = function(text, color, px, py, icon, clickable, style) {
 	}
 	this.textObj = this.drawText(text, color)
 	this.obj.addChild(this.textObj)
+	this.refreshTimer = new ACEX.CooldownTimer(0.5, true)
 	if (icon) {
 		this.iconObj = this.drawIcon(icon)
 		this.obj.addChild(this.iconObj)
@@ -29,7 +34,11 @@ ACEX.BText = function(text, color, px, py, icon, clickable, style) {
 
 ACEX.BText.extends(ACEX.Actor, "ACEX.BText")
 
-ACEX.BText.prototype.run = function() {}
+ACEX.BText.prototype.run = function() {
+	if (this.refreshTimer.trigger()) {
+		this.update()
+	}
+}
 
 ACEX.BText.prototype.updateText = function(text) {
 	this.textObj.setText(text)
