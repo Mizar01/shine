@@ -98,14 +98,8 @@ Enemy.prototype.takeDamage = function(d) {
 Enemy.prototype.addPlayerExperience = function() {
 	//Calculate experience
 	var p = gameVars.player
-	//Logic of gaining experience is based on some properties of 
-	//the enemy and the player level
-	var xp = this.level * 10 + this.damage * 1.2 + this.maxLife / 10
-	var diffLvl = (p.level - this.level) * 0.1
-	xp = xp * (1 - diffLvl)  //In case p.level is < this.level the xp is raising. Good !
-	xp = Math.max(0, Math.round(xp))
-	p.addXp(xp)
-	gameLayer.addChild(new Bubble("+" + xp, "0x00ff00", this.obj.position))
+	var xpGained = p.addXpFromEnemy(this)
+	gameLayer.addChild(new Bubble("+" + xpGained, "0x00ff00", this.obj.position))
 }
 
 Enemy.prototype.playerProximityControl = function() {

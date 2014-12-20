@@ -32,9 +32,9 @@ ACEX.Bar.prototype.redraw = function(partialTotal) {
 	this.obj.endFill()
 	this.obj.lineStyle(0)
 	if (this.colorFlux) {
-		greenPercent = p / t * 256
-		redPercent = 256 - greenPercent
-		this.obj.beginFill(Math.round(redPercent) * 256 * 256 + Math.round(greenPercent) * 256, this.alpha)
+		greenPercent = p / t * 255
+		redPercent = 255 - greenPercent
+		this.obj.beginFill(Math.round(redPercent) * 255 * 255 + Math.round(greenPercent) * 255, this.alpha)
 	}else {
 		this.obj.beginFill(0x55ff55, this.alpha)
 	}

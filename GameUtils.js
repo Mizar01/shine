@@ -21,12 +21,13 @@ GameUtils = {
 
 
 MenuTools = {
-	upgradeRadialFireRate: function() {
-		gameVars.player.upgradeRadialFireRate()
+	upgradeRadialFireCooldown: function() {
+		gameVars.player.upgradeRadialFireCooldown()
 		MenuTools.refreshGameMenu()
 	},
 	refreshGameMenu: function() {
-		$("#gameMenu_radialFireRate").text(ACEX.Utils.roundFloat(1 / gameVars.player.cooldown.maxTime, 2))
+		// $("#gameMenu_radialFireRate").text(ACEX.Utils.roundFloat(1 / gameVars.player.radialCooldown.maxTime, 3))
+		$("#gameMenu_radialFireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.radialCooldown.maxTime, 2))
 	},
 	showGameMenu: function() {
 		MenuTools.refreshGameMenu()
