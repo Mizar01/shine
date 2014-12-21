@@ -105,9 +105,14 @@ function setupHudLayer() {
 
 	hudObjects.xpBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.03, acex.sw * 0.25, acex.sh * 0.02, 
 		function() {
-			return [gameVars.player.xp, gameVars.player.nextLevelXp]
+			this.setPartialTotal(gameVars.player.xp, gameVars.player.nextLevelXp)
+			var newPostText = "L." + gameVars.player.level
+			var tpostText = this.tpost.textObj.text
+			if (tpostText != newPostText) {
+				this.tpost.updateText(newPostText)
+			}
 		})
-
+	hudObjects.xpBar.addPrePostText("xp", "lvl. 1")
 
 	// hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 400, 40)
 	// hudObjects.lifeLabel.update = function() {
@@ -116,9 +121,16 @@ function setupHudLayer() {
 
 	hudObjects.lifeBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.08, acex.sw * 0.25, acex.sh * 0.03,
 		function() {
-			return [gameVars.player.life, gameVars.player.maxLife]
+			this.setPartialTotal(gameVars.player.life, gameVars.player.maxLife)
 		},
 		true, 0.3)
+
+	hudObjects.radialCooldownBar = new ACEX.RadiusBar(acex.sw * 0.9, acex.sh * 0.9, acex.sh * 0.025,
+		function() {
+			// I will use the radiusBar with an inverse meaning in this case(the max is when cooldown reached 0)
+			var partial = gameVars.player.radialCooldown.maxTime - gameVars.player.radialCooldown.time
+			this.setPartialTotal(partial, gameVars.player.radialCooldown.maxTime)
+		})
 
 	hudObjects.optionsIcon = new ACEX.BText("", 0xffcc00, 40, acex.sh - 100, 
 		'resources/options.png', clickable = true)
@@ -141,10 +153,7 @@ function setupHudLayer() {
 	hudLayer.addChild(hudObjects.xpBar)
 	// hudLayer.addChild(hudObjects.lifeLabel)
 	hudLayer.addChild(hudObjects.lifeBar)
-
-
-
-
+	hudLayer.addChild(hudObjects.radialCooldownBar)
 }
 
 function setObjects() {

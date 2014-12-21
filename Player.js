@@ -81,7 +81,7 @@ Player.prototype.levelUp = function() {
 	this.upgradeProperty("shootRadius", "add", 1.1, 500)
 	this.upgradeProperty("maxLife", "add", 1.2, 10000)
 	this.upgradeProperty("cooldown.maxTime", "sub", 0.05, 0.2)
-	this.upgradeProperty("radialCooldown.maxTime", "sub", 0.05, 0.2)
+	this.upgradeProperty("radialCooldown.maxTime", "sub", 0.05, 1)
 	//Refill life
 	this.life = this.maxLife
 	//Determine next level xp
