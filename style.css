@@ -30,3 +30,11 @@ body {
 .acexHtmlButton {
 	cursor: pointer;
 }
+
+.upgradeBox {
+	width: 20%;
+	height:25%;
+	background-color: black;
+	text-align: center;
+	border: 1px solid gray;
+}

@@ -21,6 +21,7 @@
       <script src="TargetCursor.js"></script>
       <script src="RadialFire.js"></script>
       <script src="Bullet.js"></script>
+      <script src="Diamond.js"></script>
       <script src="Bubble.js"></script>
       <script src="Grid.js"></script>
       <script src="logics.js"></script>
@@ -33,12 +34,46 @@
       <div id="gameMenu" class="acex acexHtmlWindow">
             <h3>Game Menu</h3>
             <div id="gameMenu_content">
-                  <div>Level : <span id="gameMenu_level"/></div>
-                  <div>Exp   : </span id="gameMenu_exp"/></div>
-                  <div>
-                        <span class="acexHtmlButton" onclick="MenuTools.upgradeRadialFireCooldown()">Upgrade Radial Fire Cooldown</span>
-                        : <span id="gameMenu_radialFireCooldown"></span> s
-                  </div> 
+                  <div>Diamonds : <span id="gameMenu_diamonds"></span></div>
+                  <div  class="upgradeBox acexHtmlButton" 
+                        onclick="MenuTools.upgradeRadialFireCooldown()" 
+                        title="Upgrade Radial Fire Cooldown">
+                        <div><img src="resources/options.png"></div>
+                        <div><span id="gameMenu_radialFireCooldown"></span></div>
+                  </div>                  
+                  <div  class="upgradeBox acexHtmlButton" 
+                        onclick="MenuTools.upgradeFireCooldown()" 
+                        title="Upgrade Fire Cooldown">
+                        <div><img src="resources/options.png"></div>
+                        <div><span id="gameMenu_fireCooldown"></span></div>
+                  </div>   
+                  <!--
+                  <div  class="upgradeBox acexHtmlButton" 
+                        onclick="MenuTools.upgradeRadialFireCooldown()" 
+                        title="Upgrade Radial Fire Cooldown">
+                        <div><img src="resources/options.png"></div>
+                        <div><span id="gameMenu_radialFireCooldown"></span></div>
+                  </div>                  
+                  <div  class="upgradeBox acexHtmlButton" 
+                        onclick="MenuTools.upgradeRadialFireCooldown()" 
+                        title="Upgrade Radial Fire Cooldown">
+                        <div><img src="resources/options.png"></div>
+                        <div><span id="gameMenu_radialFireCooldown"></span></div>
+                  </div>                  
+                  <div  class="upgradeBox acexHtmlButton" 
+                        onclick="MenuTools.upgradeRadialFireCooldown()" 
+                        title="Upgrade Radial Fire Cooldown">
+                        <div><img src="resources/options.png"></div>
+                        <div><span id="gameMenu_radialFireCooldown"></span></div>
+                  </div>                  
+                  <div  class="upgradeBox acexHtmlButton" 
+                        onclick="MenuTools.upgradeRadialFireCooldown()" 
+                        title="Upgrade Radial Fire Cooldown">
+                        <div><img src="resources/options.png"></div>
+                        <div><span id="gameMenu_radialFireCooldown"></span></div>
+                  </div> -->
+
+
             </div>
       </div>
 </body>

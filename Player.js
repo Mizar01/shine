@@ -17,6 +17,7 @@ Player = function() {
 	this.reaches = 0 //only for test and fast level advance
 	this.radialFire = null
 	this.shootRadius = 100
+	this.diamonds = 0
 }
 
 Player.extends(ACEX.Actor, "Player")
@@ -128,6 +129,12 @@ Player.prototype.upgradeRadialFireCooldown = function() {
 	this.radialCooldown.maxTime = Math.max(0.2, mt)
 	//console.log("Player upgraded radial cooldown: maxTime = ", mt)
 }
+Player.prototype.upgradeFireCooldown = function() {
+	var mt = this.cooldown.maxTime
+	mt = ACEX.Utils.roundFloat(mt - 0.05, 2)
+	this.cooldown.maxTime = Math.max(0.2, mt)
+	//console.log("Player upgraded radial cooldown: maxTime = ", mt)
+}
 
 Player.prototype.addXp = function(xp) {
 	this.xp += xp
@@ -149,5 +156,8 @@ Player.prototype.addXpFromEnemy = function(e) {
 	this.addXp(xp)
 	// The return is used by the enemy to spawn a bubble message with the gained xp for player.
 	return xp
+}
 
+Player.prototype.addDiamond = function() {
+	this.diamonds++
 }

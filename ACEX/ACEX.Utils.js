@@ -27,6 +27,9 @@ ACEX.Utils = {
 		var p = Math.pow(10, precision)
 		return Math.round(n * p) / p
 	},
+	chance: function(perc) {
+		return ACEX.Utils.randInt(0, 100) < perc
+	},
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color

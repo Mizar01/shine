@@ -24,10 +24,18 @@ MenuTools = {
 	upgradeRadialFireCooldown: function() {
 		gameVars.player.upgradeRadialFireCooldown()
 		MenuTools.refreshGameMenu()
+	},	
+	upgradeFireCooldown: function() {
+		gameVars.player.upgradeFireCooldown()
+		MenuTools.refreshGameMenu()
 	},
+
 	refreshGameMenu: function() {
 		// $("#gameMenu_radialFireRate").text(ACEX.Utils.roundFloat(1 / gameVars.player.radialCooldown.maxTime, 3))
 		$("#gameMenu_radialFireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.radialCooldown.maxTime, 2))
+		$("#gameMenu_fireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.cooldown.maxTime, 2))
+		$("#gameMenu_diamonds").text(gameVars.player.diamonds)
+
 	},
 	showGameMenu: function() {
 		MenuTools.refreshGameMenu()

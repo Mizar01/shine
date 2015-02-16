@@ -90,8 +90,16 @@ Enemy.prototype.radialFireDamageControl = function() {
 Enemy.prototype.takeDamage = function(d) {
 	this.life -= d
 	if (this.life <= 0) {
+		this.setLoot()
 		this.addPlayerExperience()
 		this.explode()
+	}
+}
+
+Enemy.prototype.setLoot = function() {
+	// chance to leave a diamond 30%
+	if (ACEX.Utils.chance(30)) {
+		gameLayer.addChild(new Diamond(this.obj.position))
 	}
 }
 
