@@ -94,14 +94,6 @@ function define_game() {
 }
 
 function setupHudLayer() {
-	hudObjects.levelLabel = new ACEX.BText("Level " + gameVars.player.level, 0xffaa00, 40, 40, null, clickable = true)
-	hudObjects.levelLabel.update = function() {
-		this.updateText("Level " + gameVars.player.level)
-	}
-	// hudObjects.xpLabel = new ACEX.BText("EXP " + "0/100", 0x00aa00, 200, 40)
-	// hudObjects.xpLabel.update = function() {
-	// 	this.updateText("EXP " + gameVars.player.xp + "/" + gameVars.player.nextLevelXp)
-	// }
 
 	hudObjects.xpBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.03, acex.sw * 0.25, acex.sh * 0.02, 
 		function() {
@@ -114,16 +106,18 @@ function setupHudLayer() {
 		})
 	hudObjects.xpBar.addPrePostText("xp", "lvl. 1")
 
-	// hudObjects.lifeLabel = new ACEX.BText("Life " + gameVars.player.life, 0xffcc00, 400, 40)
-	// hudObjects.lifeLabel.update = function() {
-	// 	this.updateText("Life " + gameVars.player.life)
-	// }
-
 	hudObjects.lifeBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.08, acex.sw * 0.25, acex.sh * 0.03,
 		function() {
 			this.setPartialTotal(gameVars.player.life, gameVars.player.maxLife)
 		},
 		true, 0.3)
+
+	hudObjects.diamonds = new ACEX.BText("Diamonds: 0", 0x00ff00, acex.sw * 0.9, acex.sh * 0.12, null, false,
+		{"size": "15px", "font": "Impact"})
+	hudObjects.diamonds.update = function() {
+		this.updateText("Diamonds: " + gameVars.player.diamonds)
+	}
+
 
 	hudObjects.radialCooldownBar = new ACEX.RadiusBar(acex.sw * 0.9, acex.sh * 0.9, acex.sh * 0.025,
 		function() {
@@ -148,11 +142,9 @@ function setupHudLayer() {
 	}
 
 	hudLayer.addChild(hudObjects.optionsIcon)
-	hudLayer.addChild(hudObjects.levelLabel)
-	// hudLayer.addChild(hudObjects.xpLabel)
 	hudLayer.addChild(hudObjects.xpBar)
-	// hudLayer.addChild(hudObjects.lifeLabel)
 	hudLayer.addChild(hudObjects.lifeBar)
+	hudLayer.addChild(hudObjects.diamonds)
 	hudLayer.addChild(hudObjects.radialCooldownBar)
 }
 

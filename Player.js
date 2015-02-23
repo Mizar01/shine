@@ -11,7 +11,7 @@ Player = function() {
 	this.obj = new PIXI.Graphics()
 	this.obj.lineStyle(3, 0xaaaaff)
 	this.obj.drawCircle(0, 0, 10)
-	this.cooldown = new ACEX.CooldownTimer(2, true)
+	this.cooldown = new ACEX.CooldownTimer(1, true)
 	this.radialCooldown = new ACEX.CooldownTimer(30, false)
 	this.speed = 1.5
 	this.reaches = 0 //only for test and fast level advance
@@ -98,42 +98,40 @@ Player.prototype.takeDamage = function(d) {
 /**
 * if absolute = true  the levelFactor is a fixed value to add/subtract from the property.
 * if absolute = false (default) the levelFactor is multiplied by the level.
+* @return : false if the diamondCost is not affordable or the limit has been reached.
 */
-Player.prototype.upgradeProperty = function(propPath, opType, levelFactor, limit, absolute) {
+Player.prototype.upgradeProperty = function(propPath, opType, levelFactor, limit, absolute, diamondCost) {
 	// Retrieve the path and find the most nested object (for example cooldown.maxTime)
+	var dCost = diamondCost || 0;
+	if (dCost != 0 && dCost > this.diamonds) {
+		return false
+	}
+
 	var pV = propPath.split(".")
 	var qta = this.level * levelFactor
 	if (absolute) {
-		qta = this.levelFactor  //no based on level
+		qta = levelFactor  //no based on level
 	}
 	var innerProp = this
 	for (var pvi = 0; pvi < pV.length; pvi++) {
 		if (pvi == pV.length - 1) {
 			var currentValue = innerProp[pV[pvi]]
-			if (opType == "add") {
+			if (opType == "add" && currentValue < limit) {
 				innerProp[pV[pvi]] = Math.min(limit, currentValue + qta)
-			}else if(opType == "sub") {
-				innerProp[pV[pvi]] = Math.max(limit, currentValue - qta) 
+				this.diamonds -= dCost
+				return true
+			}else if(opType == "sub" && currentValue > limit) {
+				innerProp[pV[pvi]] = Math.max(limit, currentValue - qta)
+				this.diamonds -= dCost
+				return true;
+			}else {
+				return false;
 			}
-			console.log(innerProp, pV[pvi]) 
-			break
 		}else {
 			innerProp = innerProp[pV[pvi]]
 		}
 	}
-}
-
-Player.prototype.upgradeRadialFireCooldown = function() {
-	var mt = this.radialCooldown.maxTime
-	mt = ACEX.Utils.roundFloat(mt - 0.3, 2)
-	this.radialCooldown.maxTime = Math.max(0.2, mt)
-	//console.log("Player upgraded radial cooldown: maxTime = ", mt)
-}
-Player.prototype.upgradeFireCooldown = function() {
-	var mt = this.cooldown.maxTime
-	mt = ACEX.Utils.roundFloat(mt - 0.05, 2)
-	this.cooldown.maxTime = Math.max(0.2, mt)
-	//console.log("Player upgraded radial cooldown: maxTime = ", mt)
+	return true
 }
 
 Player.prototype.addXp = function(xp) {

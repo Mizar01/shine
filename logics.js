@@ -17,7 +17,7 @@ InteractLogic.prototype.setTarget = function(posdata) {
 
 RandomEnemyGenerator = function() {
 	ACEX.Logic.call(this)
-	this.cooldown = new ACEX.CooldownTimer(0.5, true)
+	this.cooldown = new ACEX.CooldownTimer(50, true)
 }
 RandomEnemyGenerator.extends(ACEX.Logic, "RandomEnemyGenerator")
 

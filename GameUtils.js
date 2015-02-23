@@ -22,11 +22,15 @@ GameUtils = {
 
 MenuTools = {
 	upgradeRadialFireCooldown: function() {
-		gameVars.player.upgradeRadialFireCooldown()
+		gameVars.player.upgradeProperty("radialCooldown.maxTime", "sub", 0.3, 1, true, 1)
 		MenuTools.refreshGameMenu()
 	},	
 	upgradeFireCooldown: function() {
-		gameVars.player.upgradeFireCooldown()
+		gameVars.player.upgradeProperty("cooldown.maxTime", "sub", 0.3, 0.2, true, 1)
+		MenuTools.refreshGameMenu()
+	},
+	upgradeSpeed: function() {
+		gameVars.player.upgradeProperty("speed", "add", 0.01, 3, true, 1)
 		MenuTools.refreshGameMenu()
 	},
 
@@ -34,6 +38,7 @@ MenuTools = {
 		// $("#gameMenu_radialFireRate").text(ACEX.Utils.roundFloat(1 / gameVars.player.radialCooldown.maxTime, 3))
 		$("#gameMenu_radialFireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.radialCooldown.maxTime, 2))
 		$("#gameMenu_fireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.cooldown.maxTime, 2))
+		$("#gameMenu_speed").text(ACEX.Utils.roundFloat(gameVars.player.speed, 2))
 		$("#gameMenu_diamonds").text(gameVars.player.diamonds)
 
 	},

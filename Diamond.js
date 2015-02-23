@@ -9,7 +9,7 @@ Diamond.extends(ACEX.Actor, "Diamond")
 
 Diamond.prototype.run = function() {
 	this.obj.rotation += 0.05
-	if (ACEX.Utils.actorDistance(this, gameVars.player) < 5) {
+	if (ACEX.Utils.actorDistance(this, gameVars.player) < 8) {
 		gameVars.player.addDiamond()
 		this.setForRemoval()
 	}

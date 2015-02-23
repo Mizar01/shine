@@ -88,17 +88,20 @@ Enemy.prototype.radialFireDamageControl = function() {
 	}
 }
 Enemy.prototype.takeDamage = function(d) {
-	this.life -= d
-	if (this.life <= 0) {
-		this.setLoot()
-		this.addPlayerExperience()
-		this.explode()
+	if (this.alive) {
+		this.life -= d
+		if (this.life <= 0) {
+			this.setForRemoval()
+			this.setLoot()
+			this.addPlayerExperience()
+			this.explode()
+		}
 	}
 }
 
 Enemy.prototype.setLoot = function() {
 	// chance to leave a diamond 30%
-	if (ACEX.Utils.chance(30)) {
+	if (ACEX.Utils.chance(99)) {
 		gameLayer.addChild(new Diamond(this.obj.position))
 	}
 }
@@ -131,7 +134,6 @@ Enemy.prototype.verifyNearestEnemy = function(d) {
 
 Enemy.prototype.explode = function() {
 	gameLayer.addChild(new Explosion(20, this.obj.position))
-	this.setForRemoval()
 }
 
 Enemy.prototype.run = function() {
@@ -152,7 +154,7 @@ Bug.extends(Enemy, "Bug")
 Turret = function(level, x, y) {
 	Enemy.call(this, 1, "generic_turret")
 	this.obj = new PIXI.Graphics()
-	this.cooldown = new ACEX.CooldownTimer(0.1, true)
+	this.cooldown = new ACEX.CooldownTimer(1, true)
 	this.thresholdDist = 400  //if the target is far than that, don't shoot.
 	this.redraw()
 	this.obj.position.set(x, y)
