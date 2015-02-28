@@ -6,6 +6,7 @@ var gameVars = []
 gameVars.cameraShake = null
 gameVars.player = null
 gameVars.cameraShake = null
+gameVars.activeMissions = []
 
 
 var gameView
@@ -176,6 +177,19 @@ function setObjects() {
 		)
 	)
 
+}
+
+function addMission(missionId) {
+	var m = new MissionLogic(missionId)
+	gameVars.activeMissions[missionId] = 1
+	console.log("added mission " + missionId)
+	gameView.addLogic(m)
+}
+
+function removeMission(missionId) {
+	gameView.removeLogic(missionId)
+	console.log("removed mission " + missionId)
+	delete gameVars.activeMissions[missionId]
 }
 
 // function setupGameMenus() {

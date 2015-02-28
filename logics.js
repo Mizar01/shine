@@ -143,3 +143,37 @@ CameraMoveLogic.prototype.drawTestBoundingBox = function() {
 	o.position.set(acex.sw/2, acex.sh/2)
 	acex.stageActor.obj.addChild(o)
 }
+
+MissionLogic = function(missionId) {
+	ACEX.Logic.call(this)
+	this.id = missionId
+	this.objToDestroy = null
+	this.xpReward = missions[missionId].xpReward
+	this.targetCursor = null
+	this.generateMission = missions[missionId].generate
+	this.init()
+}
+
+MissionLogic.extends(ACEX.Logic, "MissionLogic")
+
+MissionLogic.prototype.init = function() {
+	this.generateMission()
+	this.setObjectiveTarget()
+}
+
+MissionLogic.prototype.run = function() {
+	if (this.objToDestroy == null || !this.objToDestroy.alive) {
+		this.missionComplete()
+		removeMission(this.id)
+	}
+}
+MissionLogic.prototype.missionComplete = function() {
+	gameVars.player.addXp(this.xpReward)
+	this.showMessage("Mission Complete")
+}
+MissionLogic.prototype.showMessage = function(msg) {
+	// TODO
+}
+MissionLogic.prototype.setObjectiveTarget = function() {
+	// TODO : create a target object in the screen
+}

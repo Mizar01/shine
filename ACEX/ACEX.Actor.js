@@ -59,7 +59,7 @@ ACEX.Actor.prototype.setForRemoval = function() {
 }
 
 ACEX.Actor.prototype.removeSelf = function() {
-	this.owner.obj.removeChild(this.obj)
+	this.owner.obj.removeChild(this.obj)  // Call to PIXI.Object.removeChild
 }
 
 ACEX.Actor.prototype.initProps = function() {}
@@ -138,6 +138,14 @@ ACEX.ContainerActor = function() {
 ACEX.ContainerActor.extends(ACEX.Actor, "ACEX.ContainerActor")
 ACEX.ContainerActor.prototype.addLogic = function(logic) {
     this.logics.push(logic)
+}
+ACEX.ContainerActor.prototype.removeLogic = function(logicId) {
+    for (li in this.logics) {
+        var l = this.logics[li]
+        if (l.id != null && l.id == logicId) {
+            this.logics.splice(li, 1)
+        }
+    }
 }
 ACEX.ContainerActor.prototype.run = function() {
     for (li in this.logics) {
