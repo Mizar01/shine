@@ -74,6 +74,7 @@ Player.prototype.levelUp = function() {
 	// NOTE : you cannot use level as the sole parameter determining
 	// the progress of each property, or you lose the manual upgrades
 	// For this reason the properties are determined by their current values. 
+	this.xp = 0
 	this.level++
 	this.damage += this.level * 1.2
 
@@ -88,6 +89,7 @@ Player.prototype.levelUp = function() {
 	//Determine next level xp
 	this.nextLevelXp = 100 + this.level * 155
 	// hudObjects.xpLabel.update()
+	console.log("Player level up to " + this.level + " - nextLevelXp = " + this.nextLevelXp)
 }
 
 Player.prototype.takeDamage = function(d) {
@@ -135,11 +137,13 @@ Player.prototype.upgradeProperty = function(propPath, opType, levelFactor, limit
 }
 
 Player.prototype.addXp = function(xp) {
-	this.xp += xp
-	// hudObjects.xpLabel.update()
-	if (this.xp >= this.nextLevelXp) {
-		this.xp = 0
+	// It is called recursively if the player will level up multiple times
+	if (this.xp + xp >= this.nextLevelXp) {
+		var rest = xp - (this.nextLevelXp - this.xp)
 		this.levelUp()
+		this.addXp(rest)
+	}else {
+		this.addXp(xp)
 	}
 }
 

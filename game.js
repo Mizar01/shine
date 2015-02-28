@@ -25,7 +25,7 @@ function init() {
 		'resources/impact.fnt',
 		'resources/options.png'
 	]
-	new ACEX(1024, 768, assets, "define_game")
+	new ACEX(1860, 1024, assets, "define_game")
 }
 
 function define_game() {
@@ -64,7 +64,7 @@ function define_game() {
 
 
 	gameView.addLogic(gameVars.interactLogic = new InteractLogic())
-	gameView.addLogic(new RandomEnemyGenerator())
+	gameView.addLogic(new RandomSituationGenerator())
 	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
 	gameView.addLogic(gameVars.cameraMove = new CameraMoveLogic())
 

@@ -30,6 +30,19 @@ ACEX.Utils = {
 	chance: function(perc) {
 		return ACEX.Utils.randInt(0, 100) < perc
 	},
+	/**
+	 * Return the value or the nearest boundary given by min,max if 
+	 * the value goes beyond these bounds.
+	 */
+	bound: function(value, min, max) {
+		if (value > max) {
+			return max
+		}else if (value < min) {
+			return min
+		}else {
+			return value
+		}
+	},
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color

@@ -14,10 +14,9 @@ InteractLogic.prototype.setTarget = function(posdata) {
 	gameLayer.addChild(targetCursor)
 }
 
-
 RandomEnemyGenerator = function() {
 	ACEX.Logic.call(this)
-	this.cooldown = new ACEX.CooldownTimer(50, true)
+	this.cooldown = new ACEX.CooldownTimer(1, true)
 }
 RandomEnemyGenerator.extends(ACEX.Logic, "RandomEnemyGenerator")
 
@@ -176,4 +175,85 @@ MissionLogic.prototype.showMessage = function(msg) {
 }
 MissionLogic.prototype.setObjectiveTarget = function() {
 	// TODO : create a target object in the screen
+}
+
+/**
+ * Every n seconds this logic is going to generate a situation, 
+ * like spawning a group of enemies with a boss , or simply a bunch of enemies
+ * to permit grind.
+ */
+RandomSituationGenerator = function() {
+	ACEX.Logic.call(this)
+	this.cooldown = new ACEX.CooldownTimer(25, true)
+	this.cooldown.time = 0.1 // make it trigger now
+}
+
+RandomSituationGenerator.extends(ACEX.Logic, "RandomSituationGenerator")
+
+RandomSituationGenerator.prototype.run = function() {
+	if (this.cooldown.trigger()) {
+		this.generateSituation()
+	}
+}
+
+RandomSituationGenerator.prototype.generateSituation = function() {
+	// this.generateBossBase(10, 4)
+	if (ACEX.Utils.chance(50)) {
+		this.generateAssault(3)
+	} else if (ACEX.Utils.chance(70)){
+		this.generateAssault(9)
+	} else if (ACEX.Utils.chance(80)) {
+		this.generateBossBase(12, 2)
+	}else {
+		this.generateBossBase(15, 4)
+	}
+}
+RandomSituationGenerator.prototype.generateAssault = function(n) {
+	// generate 3 simple enemies outside the screen but around the player
+	// These 3 enemies must be near each other
+	var bp = this.getBasePoint()
+	var pl = gameVars.player.level
+	for (var i = 0; i < n; i++) {
+		this.spawnEnemy(bp, "Bug", pl, AIModes.alwaysFollow) 
+	}
+	console.log("Generated assault from " + bp.x + "," + bp.y)
+}
+RandomSituationGenerator.prototype.generateBossBase = function(n, lev) {
+	// generate a boss base where enemies stand waiting for the player
+	// one of the enemies have a level that is player.level + n  (the boss)
+	var bp = this.getBasePoint()
+	var pl = gameVars.player.level
+	for (var i = 0; i < n; i++) {
+		this.spawnEnemy(bp, "Bug", pl, AIModes.protectBase) 
+	}	
+	this.spawnEnemy(bp, "Bug", pl + lev, AIModes.protectBase) 
+	console.log("Generated boss base at " + bp.x + "," + bp.y)
+}
+
+RandomSituationGenerator.prototype.getBasePoint = function() {
+	var w = acex.sw
+	var h = acex.sh
+	var d = Math.max(w, h) + 100
+	var p = gameVars.player
+	var a = ACEX.Utils.randFloat(0, Math.PI * 2)
+	rx = p.obj.x + Math.cos(a) * d
+	ry = p.obj.y + Math.sin(a) * d
+	var g = gameVars.grid
+	var disperseRadius = 30
+	rx = ACEX.Utils.bound(rx, -g.w/2 + disperseRadius, g.w/2 - disperseRadius)
+	ry = ACEX.Utils.bound(ry, -g.h/2 + disperseRadius, g.h/2 - disperseRadius)
+	return {x: rx, y: ry}
+}
+
+
+RandomSituationGenerator.prototype.spawnEnemy = function(pos, enemyType, level, aiMode) {
+	//Spawn an enemy outside of the screen
+	var e = new window[enemyType](level)
+	// decide a random position around the base
+	e.obj.position.set(
+		pos.x + ACEX.Utils.randInt(-30, 30), 
+		pos.y + ACEX.Utils.randInt(-30, 30))
+	e.AIMode = aiMode
+	e.basePosition = pos
+	gameLayer.addChild(e)
 }

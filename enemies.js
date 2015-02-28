@@ -1,3 +1,25 @@
+
+// closures
+AIModes = []
+AIModes.alwaysFollow = function() {
+	this.followPlayer()
+}
+AIModes.protectBase = function() {
+	var pPos = gameVars.player.obj.position
+	var oPos = this.obj.position
+	var bp = this.basePosition
+	var dPlayerToBase = ACEX.Utils.pointDistance(pPos, bp)
+	if (dPlayerToBase < 180) {
+		this.followPlayer()
+	}else {
+		var dEnemyToBase = ACEX.Utils.pointDistance(this.obj.position, bp)
+		if (dEnemyToBase > 40) {
+			this.followPoint(bp, this.speed)
+		}
+	}
+}
+
+
 EnemySpawner = function(x, y, num) {
 	ACEX.Actor.call(this)
 	this.thresholdDist = 250
@@ -71,6 +93,9 @@ Enemy = function(level, name) {
 	this.life = this.level * 5
 	this.maxLife = this.life
 	this.speed = this.level * 0.2 + ACEX.Utils.randFloat(-0.1, 0.4)
+	this.AIMode = AIModes.alwaysFollow
+	this.basePosition = null
+	// this.farLimit = 100  //how much an enemy go far from it's base
 }
 Enemy.extends(ACEX.Actor, "Enemy")
 Enemy.prototype.followPlayer = function() {
@@ -101,7 +126,7 @@ Enemy.prototype.takeDamage = function(d) {
 
 Enemy.prototype.setLoot = function() {
 	// chance to leave a diamond 30%
-	if (ACEX.Utils.chance(99)) {
+	if (ACEX.Utils.chance(10)) {
 		gameLayer.addChild(new Diamond(this.obj.position))
 	}
 }
@@ -137,7 +162,7 @@ Enemy.prototype.explode = function() {
 }
 
 Enemy.prototype.run = function() {
-	this.followPlayer()
+	this.AIMode()
 	this.playerProximityControl()
 }
 
