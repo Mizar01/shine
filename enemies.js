@@ -9,7 +9,7 @@ AIModes.protectBase = function() {
 	var oPos = this.obj.position
 	var bp = this.basePosition
 	var dPlayerToBase = ACEX.Utils.pointDistance(pPos, bp)
-	if (dPlayerToBase < 180) {
+	if (dPlayerToBase < 400) {
 		this.followPlayer()
 	}else {
 		var dEnemyToBase = ACEX.Utils.pointDistance(this.obj.position, bp)
@@ -179,6 +179,7 @@ Bug.extends(Enemy, "Bug")
 Turret = function(level, x, y) {
 	Enemy.call(this, 1, "generic_turret")
 	this.obj = new PIXI.Graphics()
+	this.cannon = new PIXI.Graphics()
 	this.cooldown = new ACEX.CooldownTimer(1, true)
 	this.thresholdDist = 400  //if the target is far than that, don't shoot.
 	this.redraw()
@@ -193,7 +194,8 @@ Turret.prototype.run = function() {
 		this.fire()
 	}
 	this.radialFireDamageControl()
-	this.obj.rotation += 0.01
+	//this.obj.rotation += 0.01
+	this.cannon.rotation = ACEX.Utils.angleToActor(this, this.target)
 }
 
 Turret.prototype.fire = function() {
@@ -205,7 +207,18 @@ Turret.prototype.fire = function() {
 
 Turret.prototype.redraw = function() {
 	var o = this.obj
+	o.beginFill(0xffff11); 
+	o.drawCircle(-10, -10, 4)
+	o.drawCircle(10, -10, 4)
+	o.drawCircle(10, 10, 4)
+	o.drawCircle(-10, 10, 4)
+	o.endFill()
 	o.beginFill(0xff0000)
 	o.drawRect(-10, -10, 20, 20)
 	o.endFill()
+	c = this.cannon
+	c.beginFill(0xaaaaff)
+	c.drawRect(-1, -2.5, 15, 5)
+	c.endFill()
+	o.addChild(c)
 }

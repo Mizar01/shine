@@ -19,6 +19,9 @@ ACEX.Utils = {
 	angleToPoint: function(p1, p2) {
 		return Math.atan2((p2.y - p1.y),(p2.x - p1.x))
 	},
+	angleToActor: function(a1, a2) {
+		return ACEX.Utils.angleToPoint(a1.obj.position, a2.obj.position)
+	},
 	/**
 	*	Returns a float number with a maximum of decimals limited by precision.
 	*   For example n = 2.345533 and precision = 2 will return: 2.35

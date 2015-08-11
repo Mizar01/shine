@@ -141,9 +141,10 @@ Player.prototype.addXp = function(xp) {
 	if (this.xp + xp >= this.nextLevelXp) {
 		var rest = xp - (this.nextLevelXp - this.xp)
 		this.levelUp()
+		console.log("rest = " + rest)
 		this.addXp(rest)
 	}else {
-		this.addXp(xp)
+		this.xp += xp
 	}
 }
 

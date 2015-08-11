@@ -25,7 +25,7 @@ function init() {
 		'resources/impact.fnt',
 		'resources/options.png'
 	]
-	new ACEX(1860, 1024, assets, "define_game")
+	new ACEX(1860, 900, assets, "define_game")
 }
 
 function define_game() {
@@ -168,6 +168,8 @@ function setObjects() {
 	}
 	//Adding a test enemyspawner
 	gameLayer.addChild(new EnemySpawner(p.obj.position.x, p.obj.position.y + 300, 5))
+	// Adding a test turret
+	gameLayer.addChild(new Turret(1, p.obj.position.x, p.obj.position.y + 330))
 
 
 	//Adding an npc near the player
