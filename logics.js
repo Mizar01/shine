@@ -129,7 +129,7 @@ CameraMoveLogic.prototype.playerDiffs = function() {
 	return new PIXI.Point(xdiff, ydiff)
 }
 
-CameraMoveLogic.prototype.rest = function() {
+CameraMoveLogic.prototype.reset = function() {
 	gameLayer.obj.position.set(0, 0)
 }
 
@@ -220,7 +220,7 @@ RandomSituationGenerator.prototype.generateAssault = function(n) {
 }
 RandomSituationGenerator.prototype.generateBossBase = function(n, lev) {
 	// generate a boss base where enemies stand waiting for the player
-	// one of the enemies have a level that is player.level + n  (the boss)
+	// one of the enemies has a level that is player.level + n  (the boss)
 	var bp = this.getBasePoint()
 	var pl = gameVars.player.level
 	for (var i = 0; i < n; i++) {

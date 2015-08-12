@@ -7,7 +7,7 @@ Bullet = function(shooter, target) {
 	this.speed = 2
 	this.timeToLive = new ACEX.CooldownTimer(10, false)
 	this.redraw()
-	this.obj.position = this.shooter.obj.position.clone()
+	this.obj.position = this.shooter.getRelativePosition(null, gameLayer).clone()
 	this.rotateToPoint(this.target.obj.position)
 } 
 
@@ -23,7 +23,7 @@ Bullet.prototype.run = function() {
 
 Bullet.prototype.targetControl = function() {
 	var d = ACEX.Utils.actorDistance(this, this.target)
-	if (d < 5) {
+	if (d < this.target.collisionRange) {
 		if (this.target.takeDamage) {
 			this.target.takeDamage(this.damage)
 		}else {
@@ -37,5 +37,17 @@ Bullet.prototype.redraw = function() {
 	var o = this.obj
 	o.beginFill(0xffff00)
 	o.drawCircle(0, 0, 2)
+	o.endFill()
+}
+
+LaserBullet = function(shooter, target) {
+	Bullet.call(this, shooter, target)
+}
+LaserBullet.extends(Bullet, "LaserBullet")
+
+LaserBullet.prototype.redraw = function() {
+	var o = this.obj
+	o.beginFill(0xffff00)
+	o.drawRect(-1, -1, 4, 2)
 	o.endFill()
 }

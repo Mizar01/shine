@@ -95,11 +95,13 @@ Enemy = function(level, name) {
 	this.speed = this.level * 0.2 + ACEX.Utils.randFloat(-0.1, 0.4)
 	this.AIMode = AIModes.alwaysFollow
 	this.basePosition = null
+	this.collisionRange =  4 + this.level
+	this.rotateOnFollow = false
 	// this.farLimit = 100  //how much an enemy go far from it's base
 }
 Enemy.extends(ACEX.Actor, "Enemy")
 Enemy.prototype.followPlayer = function() {
-	this.followPoint(gameVars.player.obj.position, this.speed)
+	this.followPoint(gameVars.player.obj.position, this.speed, this.rotateOnFollow)
 	this.radialFireDamageControl()
 }
 Enemy.prototype.radialFireDamageControl = function() {
@@ -169,12 +171,64 @@ Enemy.prototype.run = function() {
 Bug = function(level, name) {
 	Enemy.call(this, level, name)
 	this.obj = new PIXI.Graphics()
-	this.obj.beginFill(0xff0005)
-	this.obj.lineStyle(1, 0xaaaaff)
-	this.obj.drawCircle(0, 0, 4 + level)
-	this.obj.endFill()
+	this.redraw()
 }
 Bug.extends(Enemy, "Bug")
+
+Bug.prototype.redraw = function() {
+	var o = this.obj
+	o.beginFill(0xff0005)
+	o.lineStyle(1, 0xaaaaff)
+	o.drawCircle(0, 0, this.collisionRange)
+	o.endFill()
+}
+
+OverBoss = function(level, name) {
+	Enemy.call(this, level, name)
+	this.speed = Math.min(0.5, this.speed)
+	this.life *= 3
+	// this.rotateOnFollow = true
+	this.obj = new PIXI.Graphics()
+	// this.cannon1 = new PIXI.Graphics()
+	// this.cannon2 = new PIXI.Graphics()
+	this.collisionRange = (10 + this.level * 5) / 2
+	this.redraw()
+	this.turret1 = new Turret(level, 0, -this.collisionRange/2)
+	this.turret2 = new Turret(level, 0, +this.collisionRange/2)
+	this.addChild(this.turret1)
+	this.addChild(this.turret2)
+	this.target = gameVars.player
+}
+OverBoss.extends(Enemy, "OverBoss")
+
+OverBoss.prototype.run = function() {
+	this.AIMode()
+	this.playerProximityControl()
+	// this.cannon1.rotation = ACEX.Utils.angleToActor(this, this.target)
+	// this.cannon2.rotation = ACEX.Utils.angleToActor(this, this.target)
+}
+
+OverBoss.prototype.redraw = function() {
+	var o = this.obj; var c1 = this.cannon1; var c2 = this.cannon2;
+	var s = this.collisionRange * 2.4
+	o.beginFill(0xff5505)
+	o.lineStyle(1, 0xaaaaff)
+	o.drawRect(-s/2, -s/2, s, s)
+	o.endFill()
+	// cannons
+	// c1.beginFill(0xaaaaff)
+	// c1.drawRect(-1, -2.5, 15, 5)
+	// c1.endFill()
+	// o.addChild(c1)
+	// c1.position.set(0, -s/4)
+	// c2.beginFill(0xaaaaff)
+	// c2.drawRect(-1, -2.5, 15, 5)
+	// c2.endFill()
+	// o.addChild(c2)
+	// c2.position.set(0, s/4)
+
+}
+
 
 Turret = function(level, x, y) {
 	Enemy.call(this, 1, "generic_turret")
@@ -201,7 +255,7 @@ Turret.prototype.run = function() {
 Turret.prototype.fire = function() {
 	var d = ACEX.Utils.actorDistance(this, this.target)
 	if (d < this.thresholdDist) {
-		gameLayer.addChild(new Bullet(this, this.target))
+		gameLayer.addChild(new LaserBullet(this, this.target))
 	}
 }
 

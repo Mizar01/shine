@@ -18,6 +18,7 @@ Player = function() {
 	this.radialFire = null
 	this.shootRadius = 100
 	this.diamonds = 0
+	this.collisionRange = 10
 }
 
 Player.extends(ACEX.Actor, "Player")

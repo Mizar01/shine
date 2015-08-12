@@ -112,6 +112,30 @@ ACEX.Actor.prototype.addHitAreaObj = function(hitAreaObj, pointer) {
     }
 }
 
+/**
+ * Gets the position of the object relative to the originPoint in the world.
+ * The originPoint is (0,0) or a different position if you want to find the 
+ * relative location (i.e. for a different layer) 
+ */
+// ACEX.Actor.prototype.getGlobalPosition = function(originPoint) {
+//     originPoint = originPoint || new PIXI.Point()
+//     return this.obj.toGlobal(originPoint)
+// }
+/**
+ * E' un wrapper di DisplayObject.toLocal. Se originActor è valorizzato allora l'originPoint può cambiare di conseguenza.
+ * Se originActor è nullo di default viene usato un originPoint a 0,0.
+ */
+ACEX.Actor.prototype.getRelativePosition = function(originPoint, originActor) { 
+    originPoint = originPoint || new PIXI.Point()
+    var originObj = null
+    if (originActor) {
+        originObj = originActor.obj
+    }
+    var toLocalP = this.obj.toLocal(originPoint, originObj)
+    return new PIXI.Point(toLocalP.x * -1, toLocalP.y * -1)
+}
+
+
 ACEX.Actor.prototype.setRectHitArea = function(x, y, w, h, pointer) {
     this.addHitAreaObj(new PIXI.Rectangle(x, y, w, h), pointer)
 }

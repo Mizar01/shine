@@ -170,6 +170,12 @@ function setObjects() {
 	gameLayer.addChild(new EnemySpawner(p.obj.position.x, p.obj.position.y + 300, 5))
 	// Adding a test turret
 	gameLayer.addChild(new Turret(1, p.obj.position.x, p.obj.position.y + 330))
+	
+	// Adding a test overboss
+	var testOB = new OverBoss(15, "Big Test Boss")
+	testOB.obj.position.set(p.obj.position.x - 300, p.obj.position.y)
+	gameLayer.addChild(testOB)
+
 
 
 	//Adding an npc near the player
