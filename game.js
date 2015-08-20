@@ -19,6 +19,8 @@ var gameMenuView
 gameObjects = [] //globally accessible storage for some variable and objects
 hudObjects = []  //globally accessible storage for some variables and objects
 
+var testObject = null
+
 
 function init() {
 	assets = [
@@ -169,11 +171,13 @@ function setObjects() {
 	//Adding a test enemyspawner
 	gameLayer.addChild(new EnemySpawner(p.obj.position.x, p.obj.position.y + 300, 5))
 	// Adding a test turret
-	gameLayer.addChild(new Turret(1, p.obj.position.x, p.obj.position.y + 330))
-	
+	var testTurret = new Turret(1, p.obj.position.x, p.obj.position.y + 330)
+	gameLayer.addChild(testTurret)
+
 	// Adding a test overboss
 	var testOB = new OverBoss(15, "Big Test Boss")
 	testOB.obj.position.set(p.obj.position.x - 300, p.obj.position.y)
+	testOB.obj.rotation = Math.PI / 2
 	gameLayer.addChild(testOB)
 
 

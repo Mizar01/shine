@@ -14,13 +14,14 @@ ACEX.Utils = {
 		return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
 	},
 	actorDistance: function(a1, a2) {
-		return ACEX.Utils.pointDistance(a1.getRelativePosition(), a2.getRelativePosition())
+		return ACEX.Utils.pointDistance(a1.obj.toGlobal(new PIXI.Point()), a2.obj.toGlobal(new PIXI.Point()))
 	},
 	angleToPoint: function(p1, p2) {
 		return Math.atan2((p2.y - p1.y),(p2.x - p1.x))
 	},
 	angleToActor: function(a1, a2) {
-		return ACEX.Utils.angleToPoint(a1.getRelativePosition(), a2.getRelativePosition())
+		// return ACEX.Utils.angleToPoint(a1.getRelativePosition(), a2.getRelativePosition())
+		return ACEX.Utils.angleToPoint(a1.obj.toGlobal(new PIXI.Point()), a2.obj.toGlobal(new PIXI.Point()))
 	},
 	/**
 	*	Returns a float number with a maximum of decimals limited by precision.

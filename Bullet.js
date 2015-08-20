@@ -7,8 +7,9 @@ Bullet = function(shooter, target) {
 	this.speed = 2
 	this.timeToLive = new ACEX.CooldownTimer(10, false)
 	this.redraw()
-	this.obj.position = this.shooter.getRelativePosition(null, gameLayer).clone()
+	this.obj.position = this.shooter.getPositionOnLayer(gameLayer)
 	this.rotateToPoint(this.target.obj.position)
+	// testObj = this
 } 
 
 Bullet.extends(ACEX.Actor, "Bullet")

@@ -32,12 +32,12 @@ Player.prototype.run = function() {
 		this.addChild(this.radialFire)
 		this.radialCooldown.restart()
 	}
-
+	var ne = gameVars.nearestEnemy
 	if (this.cooldown.trigger() && 
-		gameVars.nearestEnemy != null &&
-		gameVars.nearestEnemy.alive &&
-		gameVars.nearestEnemyDistance <= this.shootRadius) {
-		gameLayer.addChild(new Bullet(this, gameVars.nearestEnemy))
+		ne != null &&
+		ne.alive &&
+		ACEX.Utils.actorDistance(this, ne) <= this.shootRadius) {
+		gameLayer.addChild(new Bullet(this, ne))
 	}
 }
 

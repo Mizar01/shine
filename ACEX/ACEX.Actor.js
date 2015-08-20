@@ -135,6 +135,15 @@ ACEX.Actor.prototype.getRelativePosition = function(originPoint, originActor) {
     return new PIXI.Point(toLocalP.x * -1, toLocalP.y * -1)
 }
 
+/**
+ * Note : to have the correct position on the layer, the layer must be direct
+ * child of global scene and not rotated
+ */
+ACEX.Actor.prototype.getPositionOnLayer = function(layer) {
+    var gp = this.obj.toGlobal(new PIXI.Point())
+    return new PIXI.Point(gp.x - layer.obj.x, gp.y - layer.obj.y)
+}
+
 
 ACEX.Actor.prototype.setRectHitArea = function(x, y, w, h, pointer) {
     this.addHitAreaObj(new PIXI.Rectangle(x, y, w, h), pointer)

@@ -4,6 +4,7 @@ AIModes = []
 AIModes.alwaysFollow = function() {
 	this.followPlayer()
 }
+
 AIModes.protectBase = function() {
 	var pPos = gameVars.player.obj.position
 	var oPos = this.obj.position
@@ -97,11 +98,21 @@ Enemy = function(level, name) {
 	this.basePosition = null
 	this.collisionRange =  4 + this.level
 	this.rotateOnFollow = false
+	this.keepDistance = false
 	// this.farLimit = 100  //how much an enemy go far from it's base
 }
 Enemy.extends(ACEX.Actor, "Enemy")
 Enemy.prototype.followPlayer = function() {
-	this.followPoint(gameVars.player.obj.position, this.speed, this.rotateOnFollow)
+	var follow = true
+	if (this.keepDistance) {
+		var d = ACEX.Utils.actorDistance(this, gameVars.player)
+		if (d < this.collisionRange * 3) {
+			follow = false
+		}
+	}
+	if (follow) {
+		this.followPoint(gameVars.player.obj.position, this.speed, this.rotateOnFollow)
+	}
 	this.radialFireDamageControl()
 }
 Enemy.prototype.radialFireDamageControl = function() {
@@ -153,9 +164,17 @@ Enemy.prototype.playerProximityControl = function() {
 Enemy.prototype.verifyNearestEnemy = function(d) {
 	var ne = gameVars.nearestEnemy
 	var p = gameVars.player
-	if (!ne || !ne.alive || (ne && gameVars.nearestEnemyDistance > d)) {
+	// if (!ne || !ne.alive || (ne && gameVars.nearestEnemyDistance > d)) {
+	// 	gameVars.nearestEnemy = this
+	// 	gameVars.nearestEnemyDistance = d
+	// }
+	if (ne && ne.alive) {
+		var neDist = ACEX.Utils.actorDistance(ne, gameVars.player)
+		if (neDist > d) {
+			gameVars.nearestEnemy = this
+		}
+	}else {
 		gameVars.nearestEnemy = this
-		gameVars.nearestEnemyDistance = d
 	}
 }
 
@@ -187,7 +206,7 @@ OverBoss = function(level, name) {
 	Enemy.call(this, level, name)
 	this.speed = Math.min(0.5, this.speed)
 	this.life *= 3
-	// this.rotateOnFollow = true
+	this.rotateOnFollow = true
 	this.obj = new PIXI.Graphics()
 	// this.cannon1 = new PIXI.Graphics()
 	// this.cannon2 = new PIXI.Graphics()
@@ -198,6 +217,7 @@ OverBoss = function(level, name) {
 	this.addChild(this.turret1)
 	this.addChild(this.turret2)
 	this.target = gameVars.player
+	this.keepDistance = true
 }
 OverBoss.extends(Enemy, "OverBoss")
 
@@ -235,6 +255,7 @@ Turret = function(level, x, y) {
 	this.obj = new PIXI.Graphics()
 	this.cannon = new PIXI.Graphics()
 	this.cooldown = new ACEX.CooldownTimer(1, true)
+	this.cooldown.time = 0.1
 	this.thresholdDist = 400  //if the target is far than that, don't shoot.
 	this.redraw()
 	this.obj.position.set(x, y)
@@ -248,8 +269,13 @@ Turret.prototype.run = function() {
 		this.fire()
 	}
 	this.radialFireDamageControl()
-	//this.obj.rotation += 0.01
-	this.cannon.rotation = ACEX.Utils.angleToActor(this, this.target)
+	// This is a bad way to fix relative angle when targeting the player and 
+	// the turret is in another rotated reference system like a bigger enemy (see Overboss)
+	// This is bad because it does consider only one level of sub rotations.
+	// TODO: decide what is the best way to code the correct API for the actors or objects to rotate
+	// with relative rotations.
+	this.cannon.rotation = ACEX.Utils.angleToActor(this, this.target) - this.obj.parent.rotation
+	
 }
 
 Turret.prototype.fire = function() {
