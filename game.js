@@ -75,6 +75,9 @@ function define_game() {
 	gameLayer.addChild(gameVars.grid = new Grid(100))
 	gameLayer.addChild(gameVars.player = new Player())
 
+	// XXX : For tests ONLY
+	gameVars.player.addXp(1000)
+
 	//Adding some random turrets in the map
 	setObjects()
 	setupHudLayer()
@@ -175,7 +178,7 @@ function setObjects() {
 	gameLayer.addChild(testTurret)
 
 	// Adding a test overboss
-	var testOB = new OverBoss(15, "Big Test Boss")
+	var testOB = new OverBoss(2, "Big Test Boss")
 	testOB.obj.position.set(p.obj.position.x - 300, p.obj.position.y)
 	testOB.obj.rotation = Math.PI / 2
 	gameLayer.addChild(testOB)

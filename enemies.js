@@ -210,7 +210,7 @@ OverBoss = function(level, name) {
 	this.obj = new PIXI.Graphics()
 	// this.cannon1 = new PIXI.Graphics()
 	// this.cannon2 = new PIXI.Graphics()
-	this.collisionRange = (10 + this.level * 5) / 2
+	this.collisionRange = Math.max(20, (10 + this.level * 5) / 2)
 	this.redraw()
 	this.turret1 = new Turret(level, 0, -this.collisionRange/2)
 	this.turret2 = new Turret(level, 0, +this.collisionRange/2)

@@ -15,5 +15,5 @@ TODO (* : done) :
 
 * After the new Implementation of getRelativePosition the distance calculation on bullet collision is not well calculated
 * I can't make the overboss rotate, when it rotates its turrets don't shoot anymore.
-- Sometimes a Bug object generates a bad transform (but I changed code, so maybe it will not happen again)
+* Sometimes a Bug object generates a bad transform (but I changed code, so maybe it will not happen again)
 

@@ -5,7 +5,7 @@ Bullet = function(shooter, target) {
 	this.target = target
 	this.obj = new PIXI.Graphics()
 	this.speed = 2
-	this.timeToLive = new ACEX.CooldownTimer(10, false)
+	this.timeToLive = new ACEX.CooldownTimer(4, false)
 	this.redraw()
 	this.obj.position = this.shooter.getPositionOnLayer(gameLayer)
 	this.rotateToPoint(this.target.obj.position)
@@ -23,6 +23,11 @@ Bullet.prototype.run = function() {
 }
 
 Bullet.prototype.targetControl = function() {
+	if (this.target == null || !this.target.alive) {
+		// for now assign to an eventual new target
+		this.target = gameVars.nearestEnemy
+		return
+	}
 	var d = ACEX.Utils.actorDistance(this, this.target)
 	if (d < this.target.collisionRange) {
 		if (this.target.takeDamage) {
