@@ -1,17 +1,17 @@
 // These are function missions used by MissionLogic
-var missions = []
-missions["FirstMission"] = {
-	generate: function() {
-		var p = gameVars.player
-		var x = p.obj.position.x + 200
-		var y = p.obj.position.y - 30
-		var b = new Bug(1)
-		b.obj.position.set(x, y)
-		gameLayer.addChild(b)
-		this.objToDestroy = b
-	},
-	xpReward: 300
-}
+// var missions = []
+// missions["FirstMission"] = {
+// 	generate: function() {
+// 		var p = gameVars.player
+// 		var x = p.obj.position.x + 200
+// 		var y = p.obj.position.y - 30
+// 		var b = new Bug(1)
+// 		b.obj.position.set(x, y)
+// 		gameLayer.addChild(b)
+// 		this.objToDestroy = b
+// 	},
+// 	xpReward: 300
+// }
 
 Quest = function(name, desc, action, objType, xpReward, diamondsReward, objName, targetQta)  {
 	this.name = name
@@ -23,32 +23,55 @@ Quest = function(name, desc, action, objType, xpReward, diamondsReward, objName,
 	this.currentQta = 0
 	this.xpReward = xpReward
 	this.diamondsReward = diamondsReward || 0
-	this.nextTime = new Date().getTime()
 	this.completed = false
-	this.generate()
+	this.binding = null
 }
 
-Quest.prototype.generate = function() {}
-Quest.prototype.check = function() {
+Quest.prototype.activate = function() {
+	if (this.binding != null) {
+		this.binding.hasActiveQuests = true
+	}
+	gameVars.questsLogic.addQuest(this)
+}
+/** 
+ * This function can be overwritten.
+ * It must collect the progress from the passed events and return true only in case of quest completed.
+ * Some implementations could not base their progress on passed events but on other custom situations, like
+ * for example : the player reaches 10.000 diamonds or 100 kills in total or player lose 30% of life, or 
+ * some quests could be so detailed on special objects like : collect the specific object, kill the enemy with name
+ * 'xxxx yyy' etc.
+ */
+Quest.prototype.check = function(events) {
 	if (!this.completed) {
-		// console.log("eventLog.checkEvents(" + this.nextTime + "," + this.action + "," + this.objType +","+ this.objName + ")")
-		var r = eventLog.checkEvents(this.nextTime, this.action, this.objType, this.objName)
-		this.currentQta += r.n
-		if (r.n > 0) {
-			console.log("currentTime = " + this.nextTime + "," + r)
-			console.log("Quest " + this.name + ": progress : " + this.currentQta + "/" + this.targetQta)
+		console.log(this.action + "," + this.objType +","+ this.objName)
+		for (var i in events) {
+			var e  = events[i]
+			//console.log(e)
+			if (e.action == this.action &&
+				e.objType == this.objType &&
+				(this.objName == "" || e.objName == this.objName)) {
+				this.currentQta += e.amount
+				console.log("Quest " + this.name + ": progress : " + this.currentQta + "/" + this.targetQta)
+			}
 		}
-		this.nextTime = r.nextTime + 1
 		if (this.currentQta >= this.targetQta) {
-			this.completed = true
-			this.complete()
+			this.completeQuest()
+			return true
 		}
 	}
+	return this.completed
 }
 
-Quest.prototype.complete = function() {
+
+Quest.prototype.completeQuest = function() {
+	this.completed = true
+	console.log("Quest " + this.name + " is complete. Earned " + this.xpReward + "xp and " + this.diamondsReward + " diamonds")
 	gameVars.player.addXp(this.xpReward)
 	gameVars.player.diamonds += this.diamondsReward
+}
+
+Quest.prototype.bindNpc = function(npc) {
+	this.binding = npc
 }
 
 StandardKillQuest = function(name, desc, objType, xpReward, diamondsReward, qta) {

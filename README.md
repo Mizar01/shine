@@ -16,4 +16,6 @@ TODO (* : done) :
 * After the new Implementation of getRelativePosition the distance calculation on bullet collision is not well calculated
 * I can't make the overboss rotate, when it rotates its turrets don't shoot anymore.
 * Sometimes a Bug object generates a bad transform (but I changed code, so maybe it will not happen again)
+- now when I click to close the speechText the player goes there. This doesn't happen (and it is right) when I'm opening the speechText
+  (try with some precedent versions, I can't understand why)
 

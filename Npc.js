@@ -1,3 +1,4 @@
+// NOTES: an npc can propose a quest at a time to the player.
 Npc = function(name, x, y) {
 	ACEX.Actor.call(this)
 	this.friendly = true
@@ -11,12 +12,31 @@ Npc = function(name, x, y) {
 	this.obj.position.set(x, y)
 	this.hasActiveQuests = false
 	this.hasNewQuests = true
+	this.speechText = null
+	this.questQueueMax = 10
+	this.currentQuest = new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)
+	this.currentQuest.bindNpc(this)
 }
 
 Npc.extends(ACEX.Actor, "Npc")
 
 Npc.prototype.mouseup = function() {
-	hudLayer.addChild(new ACEX.SpeechText("Hello ! My name is " + this.name))
+	if (this.speechText == null || !this.speechText.alive) {
+		var txt = "Hello ! My name is " + this.name + "."
+		if (this.hasActiveQuests && !this.currentQuest.completed) {
+			txt += " Sorry. You have to complete the quest " + this.currentQuest + " before I can give you other tasks."
+		}
+		this.speechText = new ACEX.SpeechText(txt)
+		var showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
+			0, 
+			this.speechText.h + 20, null, clickable = true)
+		showQuestButton.mouseup = function() {
+			gameView.pause()
+			MenuTools.showQuestMenu(this.currentQuest.name)
+		}
+		this.speechText.addChild(showQuestButton)
+		hudLayer.addChild(this.speechText)
+	}
 }
 
 Npc.prototype.run = function() {

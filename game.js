@@ -14,7 +14,6 @@ var hitAreaLayer
 var gameLayer // ActorManager
 var hudLayer
 var gameMenuView
-var eventLog = new EventLog() // it's useful for stats and quest checking
 //var gameMenuLayer
 
 gameObjects = [] //globally accessible storage for some variable and objects
@@ -51,6 +50,7 @@ function define_game() {
 	// hitAreaLayer.obj.addChild(o)
 	hitAreaLayer.setRectHitArea(0, 0, acex.sw, acex.sh, false)
 	hitAreaLayer.mouseup = function(posdata) {
+			console.log(posdata)
 			if (!gameView.paused) {
 				gameVars.interactLogic.setTarget(posdata)
 			}		
@@ -70,6 +70,7 @@ function define_game() {
 	gameView.addLogic(new RandomSituationGenerator())
 	gameView.addLogic(gameVars.cameraShake = new CameraShakeLogic())
 	gameView.addLogic(gameVars.cameraMove = new CameraMoveLogic())
+	gameView.addLogic(gameVars.questsLogic = new QuestsLogic())
 
 
 	//Adding a background grid
@@ -185,8 +186,8 @@ function setObjects() {
 	gameLayer.addChild(testOB)
 
 	// Adding a test quest
-	gameView.addLogic(new QuestLogic(new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)))
-
+	var testQuest = new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)
+	testQuest.activate()
 
 
 	//Adding an npc near the player
@@ -198,18 +199,18 @@ function setObjects() {
 
 }
 
-function addMission(missionId) {
-	var m = new MissionLogic(missionId)
-	gameVars.activeMissions[missionId] = 1
-	console.log("added mission " + missionId)
-	gameView.addLogic(m)
-}
+// function addMission(missionId) {
+// 	var m = new MissionLogic(missionId)
+// 	gameVars.activeMissions[missionId] = 1
+// 	console.log("added mission " + missionId)
+// 	gameView.addLogic(m)
+// }
 
-function removeMission(missionId) {
-	gameView.removeLogic(missionId)
-	console.log("removed mission " + missionId)
-	delete gameVars.activeMissions[missionId]
-}
+// function removeMission(missionId) {
+// 	gameView.removeLogic(missionId)
+// 	console.log("removed mission " + missionId)
+// 	delete gameVars.activeMissions[missionId]
+// }
 
 // function setupGameMenus() {
 // 	gameVars.gameMenu = new ACEX.Window("Game Menu", 400,  300)
@@ -217,47 +218,47 @@ function removeMission(missionId) {
 // 	gameMenuLayer.addChild(gameVars.gameMenu)
 // }
 
-function EventLog() {
-	this.maxQueue = 20
-	this.events = []
-	this.addEvent = function(action, objType, objName, amount) {
-		objName = objName || ""
-		amount = amount || 1
-		var t = new Date().getTime()
-		if (this.events.length > this.maxQueue) {
-			this.events.splice(0, 1)
-		}
-		this.events.push({
-			time: t, 
-			action: action, 
-			objType: objType,
-			objName: objName,
-			amount: amount,
-		})
-	}
-	/**
-	 * Return the number of events checked and the last time registerd
-	 */
-	this.checkEvents = function(afterTime, action, objType, objName, amount) {
-		objName = objName || ""
-		amount = amount || 1
-		var maxTime = afterTime
-		var numFound = 0
-		for (var i in this.events) {
-			var e  = this.events[i]
-			//console.log(e)
-			if (e.time >= afterTime &&
-				e.action == action &&
-				e.objType == objType &&
-				(objName == "" || e.objName == objName) &&
-				e.amount == amount) {
-				numFound++
-				if (e.time > maxTime) {
-					maxTime = e.time
-				}
-			}
-		}
-		return {n: numFound, nextTime: maxTime}
-	}
-}
+// function EventLog() {
+// 	this.maxQueue = 20
+// 	this.events = []
+// 	this.addEvent = function(action, objType, objName, amount) {
+// 		objName = objName || ""
+// 		amount = amount || 1
+// 		var t = new Date().getTime()
+// 		if (this.events.length > this.maxQueue) {
+// 			this.events.splice(0, 1)
+// 		}
+// 		this.events.push({
+// 			time: t, 
+// 			action: action, 
+// 			objType: objType,
+// 			objName: objName,
+// 			amount: amount,
+// 		})
+// 	}
+// 	/**
+// 	 * Return the number of events checked and the last time registerd
+// 	 */
+// 	this.checkEvents = function(afterTime, action, objType, objName, amount) {
+// 		objName = objName || ""
+// 		amount = amount || 1
+// 		var maxTime = afterTime
+// 		var numFound = 0
+// 		for (var i in this.events) {
+// 			var e  = this.events[i]
+// 			//console.log(e)
+// 			if (e.time >= afterTime &&
+// 				e.action == action &&
+// 				e.objType == objType &&
+// 				(objName == "" || e.objName == objName) &&
+// 				e.amount == amount) {
+// 				numFound++
+// 				if (e.time > maxTime) {
+// 					maxTime = e.time
+// 				}
+// 			}
+// 		}
+// 		return {n: numFound, nextTime: maxTime}
+// 	}
+// }
 

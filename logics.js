@@ -143,54 +143,77 @@ CameraMoveLogic.prototype.drawTestBoundingBox = function() {
 	acex.stageActor.obj.addChild(o)
 }
 
-QuestLogic = function(quest) {
+QuestsLogic = function() {
 	ACEX.Logic.call(this)
-	this.quest = quest
+	this.quests = []
+	this.eventsToCheck = [] //events in a single loop
+}
+QuestsLogic.extends(ACEX.Logic, "QuestsLogic")
+
+QuestsLogic.prototype.addQuest = function(quest) {
+	this.quests.push(quest)
 	console.log("Initiated quest: " + quest.name + ": " + quest.action + " " + quest.targetQta + " " + quest.objType + "/s")
 }
-QuestLogic.extends(ACEX.Logic, "QuestLogic")
-QuestLogic.prototype.run = function() {
-	this.quest.check()
-	if (this.quest.completed) {
-		console.log("Quest + " + this.quest.name + " completed !")
-		this.setForRemoval()
+QuestsLogic.prototype.run = function() {
+	if (this.eventsToCheck.length <= 0) {
+		return
 	}
-}
-
-
-MissionLogic = function(missionId) {
-	ACEX.Logic.call(this)
-	this.id = missionId
-	this.objToDestroy = null
-	this.xpReward = missions[missionId].xpReward
-	this.targetCursor = null
-	this.generateMission = missions[missionId].generate
-	this.init()
-}
-
-MissionLogic.extends(ACEX.Logic, "MissionLogic")
-
-MissionLogic.prototype.init = function() {
-	this.generateMission()
-	this.setObjectiveTarget()
-}
-
-MissionLogic.prototype.run = function() {
-	if (this.objToDestroy == null || !this.objToDestroy.alive) {
-		this.missionComplete()
-		removeMission(this.id)
+	for (var i in this.quests) {
+		var q = this.quests[i]
+		if (q.check(this.eventsToCheck)) {
+			this.quests.splice(i, 1)
+		}
 	}
+	// clear events for the next loop
+	this.eventsToCheck = []
 }
-MissionLogic.prototype.missionComplete = function() {
-	gameVars.player.addXp(this.xpReward)
-	this.showMessage("Mission Complete")
+QuestsLogic.prototype.addEvent = function(action, objType, objName, amount) {
+	objName = objName || ""
+	amount = amount || 1
+	var t = new Date().getTime()
+	this.eventsToCheck.push({
+		time: t, 
+		action: action, 
+		objType: objType,
+		objName: objName,
+		amount: amount,
+	})
 }
-MissionLogic.prototype.showMessage = function(msg) {
-	// TODO
-}
-MissionLogic.prototype.setObjectiveTarget = function() {
-	// TODO : create a target object in the screen
-}
+
+
+// MissionLogic = function(missionId) {
+// 	ACEX.Logic.call(this)
+// 	this.id = missionId
+// 	this.objToDestroy = null
+// 	this.xpReward = missions[missionId].xpReward
+// 	this.targetCursor = null
+// 	this.generateMission = missions[missionId].generate
+// 	this.init()
+// }
+
+// MissionLogic.extends(ACEX.Logic, "MissionLogic")
+
+// MissionLogic.prototype.init = function() {
+// 	this.generateMission()
+// 	this.setObjectiveTarget()
+// }
+
+// MissionLogic.prototype.run = function() {
+// 	if (this.objToDestroy == null || !this.objToDestroy.alive) {
+// 		this.missionComplete()
+// 		removeMission(this.id)
+// 	}
+// }
+// MissionLogic.prototype.missionComplete = function() {
+// 	gameVars.player.addXp(this.xpReward)
+// 	this.showMessage("Mission Complete")
+// }
+// MissionLogic.prototype.showMessage = function(msg) {
+// 	// TODO
+// }
+// MissionLogic.prototype.setObjectiveTarget = function() {
+// 	// TODO : create a target object in the screen
+// }
 
 /**
  * Every n seconds this logic is going to generate a situation, 
