@@ -182,6 +182,11 @@ ACEX.ContainerActor.prototype.removeLogic = function(logicId) {
 }
 ACEX.ContainerActor.prototype.run = function() {
     for (li in this.logics) {
-        this.logics[li].run()
+        if (this.logics[li].toDelete) {
+            this.logics.splice(li, 1)
+        }else {
+            this.logics[li].run()
+        }
+
     }
 }

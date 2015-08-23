@@ -129,6 +129,7 @@ Enemy.prototype.takeDamage = function(d) {
 	if (this.alive) {
 		this.life -= d
 		if (this.life <= 0) {
+			eventLog.addEvent("kill", this.type, this.name, 1)
 			this.setForRemoval()
 			this.setLoot()
 			this.addPlayerExperience()

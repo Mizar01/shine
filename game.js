@@ -14,6 +14,7 @@ var hitAreaLayer
 var gameLayer // ActorManager
 var hudLayer
 var gameMenuView
+var eventLog = new EventLog() // it's useful for stats and quest checking
 //var gameMenuLayer
 
 gameObjects = [] //globally accessible storage for some variable and objects
@@ -183,6 +184,9 @@ function setObjects() {
 	testOB.obj.rotation = Math.PI / 2
 	gameLayer.addChild(testOB)
 
+	// Adding a test quest
+	gameView.addLogic(new QuestLogic(new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)))
+
 
 
 	//Adding an npc near the player
@@ -212,4 +216,48 @@ function removeMission(missionId) {
 // 	gameVars.gameMenu.center()
 // 	gameMenuLayer.addChild(gameVars.gameMenu)
 // }
+
+function EventLog() {
+	this.maxQueue = 20
+	this.events = []
+	this.addEvent = function(action, objType, objName, amount) {
+		objName = objName || ""
+		amount = amount || 1
+		var t = new Date().getTime()
+		if (this.events.length > this.maxQueue) {
+			this.events.splice(0, 1)
+		}
+		this.events.push({
+			time: t, 
+			action: action, 
+			objType: objType,
+			objName: objName,
+			amount: amount,
+		})
+	}
+	/**
+	 * Return the number of events checked and the last time registerd
+	 */
+	this.checkEvents = function(afterTime, action, objType, objName, amount) {
+		objName = objName || ""
+		amount = amount || 1
+		var maxTime = afterTime
+		var numFound = 0
+		for (var i in this.events) {
+			var e  = this.events[i]
+			//console.log(e)
+			if (e.time >= afterTime &&
+				e.action == action &&
+				e.objType == objType &&
+				(objName == "" || e.objName == objName) &&
+				e.amount == amount) {
+				numFound++
+				if (e.time > maxTime) {
+					maxTime = e.time
+				}
+			}
+		}
+		return {n: numFound, nextTime: maxTime}
+	}
+}
 

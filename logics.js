@@ -143,6 +143,21 @@ CameraMoveLogic.prototype.drawTestBoundingBox = function() {
 	acex.stageActor.obj.addChild(o)
 }
 
+QuestLogic = function(quest) {
+	ACEX.Logic.call(this)
+	this.quest = quest
+	console.log("Initiated quest: " + quest.name + ": " + quest.action + " " + quest.targetQta + " " + quest.objType + "/s")
+}
+QuestLogic.extends(ACEX.Logic, "QuestLogic")
+QuestLogic.prototype.run = function() {
+	this.quest.check()
+	if (this.quest.completed) {
+		console.log("Quest + " + this.quest.name + " completed !")
+		this.setForRemoval()
+	}
+}
+
+
 MissionLogic = function(missionId) {
 	ACEX.Logic.call(this)
 	this.id = missionId
