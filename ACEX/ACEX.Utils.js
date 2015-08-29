@@ -47,6 +47,10 @@ ACEX.Utils = {
 			return value
 		}
 	},
+	generateActorId: function(type) {
+		type = type || "Actor"
+		return type + ACEX.Utils.randInt(100000, 999999) + ACEX.Utils.randInt(100000, 999999)
+	}
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color

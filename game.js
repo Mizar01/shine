@@ -197,6 +197,27 @@ function setObjects() {
 		)
 	)
 
+	// Test for mouse up
+	// BText
+	// var testBText = new ACEX.BText("Test BText", 0x00ff00, acex.sw * 0.3, acex.sh * 0.3, null, true,
+	// 	{"size": "15px", "font": "Impact"})
+
+	// testBText.mouseup = function() {
+	// 	this.setForRemoval()
+	// }
+	// hudLayer.addChild(testBText)
+	// SpeechText
+	// var npcDialog = new ACEX.Actor()
+	// npcDialog.obj = new PIXI.DisplayObjectContainer
+	// npcDialog.speechText = new ACEX.SpeechText("Test Speech Text")
+	// npcDialog.showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
+	// 	0, npcDialog.speechText.obj.position.y + 20, null, clickable = true)
+	// npcDialog.showQuestButton.mouseup = function() { console.log("hello") }
+	// npcDialog.addChild(npcDialog.speechText)
+	// npcDialog.addChild(npcDialog.showQuestButton)
+
+	// hudLayer.addChild(npcDialog)
+
 }
 
 // function addMission(missionId) {

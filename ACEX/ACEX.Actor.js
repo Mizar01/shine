@@ -4,8 +4,10 @@ ACEX.Actor = function() {
 	this.obj = null
     this.owner = null
     this.paused = false
-    this.hitAreaObj = null //A separated hitAreaObj (sometimes is useful to have a separated object for this.)
+    // this.hitAreaObj = null //A separated hitAreaObj (sometimes is useful to have a separated object for this.)
     this.hideOnPause = false
+
+    this.id = ACEX.Utils.generateActorId(this.type) // it can be useful for some improvements
 }
 
 ACEX.Actor.prototype.__run = function() {
