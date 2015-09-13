@@ -17,10 +17,24 @@ GameUtils = {
     	var rf = fn[ACEX.Utils.randInt(0, fn.length - 1)]
     	return rf + " " + rl
 	},
+	findQuest: function(qId) {
+		for (var i in gameVars.globalQuestList) {
+			var q = gameVars.globalQuestList[i]
+			if (q.id == qId) {
+				return q
+			}
+		}
+	},
 }
 
-
 MenuTools = {
+	show: function(menuName) {
+		MenuTools["refresh" + ACEX.Utils.capitalize(menuName)]()
+		$("#" + menuName).show()
+	},
+	hide: function(menuName) {
+		$("#" + menuName).hide()
+	},
 	upgradeRadialFireCooldown: function() {
 		gameVars.player.upgradeProperty("radialCooldown.maxTime", "sub", 0.3, 1, true, 1)
 		MenuTools.refreshGameMenu()
@@ -42,12 +56,52 @@ MenuTools = {
 		$("#gameMenu_diamonds").text(gameVars.player.diamonds)
 
 	},
-	showGameMenu: function() {
-		MenuTools.refreshGameMenu()
-		$("#gameMenu").show()
+	refreshJournalMenu: function() {
+		var html = ""
+		for (var i in gameVars.player.activeQuests) {
+			var q = gameVars.player.activeQuests[i]
+			html += ""+
+				"<div>\n" +
+				"	<div class='questContent'>" + q.name + "</div>\n" +
+				"   <div class='questAbandon acexHtmlButton' onclick='MenuTools.abandonQuest(\"" + q.id + "\")'>Abandon</div>\n" + 
+				"</div>\n"
+		}
+		$("#journalMenu_content").html(html)
+	},	
+	refreshProposedQuestMenu: function() {
+		var cc = gameVars.npcDialogContainer.proposedQuest
+		ACEX.HtmlUtils.setInput("proposedQuestId", cc.id)
+		$("#currentCharacterQuest .questContent").html(cc.name)
+		gameVars.npcDialogContainer.close()
 	},
-	hideGameMenu: function() {
-		$("#gameMenu").hide()
+	// showGameMenu: function() {
+	// 	MenuTools.refreshGameMenu()
+	// 	$("#gameMenu").show()
+	// },
+	// hideGameMenu: function() {
+	// 	$("#gameMenu").hide()
+	// },
+	abandonQuest: function(qId) {
+		var q = GameUtils.findQuest(qId)
+		q.abandon()
+		MenuTools.refreshJournalMenu()
+	},	
+	acceptQuest: function() {
+		var cId = ACEX.HtmlUtils.getInput("proposedQuestId")
+		// TODO: add the quest to journal
+		// find the npc with this questId
+		var q = GameUtils.findQuest(cId)
+		q.accept()
+		$("#proposedQuestMenu").hide()
+		console.log("Accepted mission " + q.name)
+		// TODO : show some message on screen (a toast)
+	},	
+	refuseQuest: function() {
+		$("#proposedQuestMenu").hide()
+
+	},	
+	browseQuest: function(direction) {
+		// TODO: load inside #questContent the next or prev. quest in the player list.
 	},
 	center: function(id) {
 		var w = $("#" + id).width()

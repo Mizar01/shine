@@ -17,13 +17,15 @@ ACEX.BText = function(text, color, px, py, icon, clickable, style) {
 		this.iconObj = this.drawIcon(icon)
 		this.obj.addChild(this.iconObj)
 	}
-	if (this.icon) {
-		this.drawIcon()
-	}
 	test_var = this
 	if (clickable) {
 		// TODO : set the click area size based on the button/text dimensions
-		this.setRectHitArea(0, 0, text.length * 30, 40, true)
+		var hitW = text.length * 30
+		var hitH = 40
+		if (this.iconObj) {
+			hitW = 40
+		}
+		this.setRectHitArea(0, 0, hitW, hitH, true)
 		// 
 		// this.obj.buttonMode = true
 		// this.obj.interactive = true

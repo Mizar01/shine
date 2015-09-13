@@ -30,7 +30,7 @@ Npc.prototype.mouseup = function() {
 	if (npcDg == null || forceOpen) {
 		var txt = "Hello ! My name is " + this.name + "."
 		if (this.hasActiveQuests && !this.currentQuest.completed) {
-			txt += " Sorry. You have to complete the quest " + this.currentQuest + " before I can give you other tasks."
+			txt += " Sorry. You have to complete the quest " + this.currentQuest.name + " before I can give you other tasks."
 		}
 		var newNpcDg = new NpcDialogContainer(txt, this)
 		gameVars["npcDialogContainer"] = newNpcDg
@@ -72,22 +72,24 @@ Npc.prototype.redraw = function() {
 NpcDialogContainer = function(txt, npc) {
 	ACEX.Actor.call(this)
 	this.npcId = npc.id
+	this.proposedQuest = npc.currentQuest
 	this.obj = new PIXI.DisplayObjectContainer()
 	this.speechText = new ACEX.SpeechText(txt)
 	this.speechText.mouseup = function() {
 		gameVars.npcDialogContainer.close()
 	}
-	this.showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
-		this.speechText.obj.position.x, 
-		this.speechText.obj.position.y + this.speechText.h + 20, null, clickable = true)
-	this.showQuestButton.mouseup = function() {
-// console.log(this.textObj.textWidth)
-// console.log (this.textObj)
-		gameView.pause()
-		//MenuTools.showQuestMenu(this.currentQuest.name)
-	}
 	this.addChild(this.speechText)
-	this.addChild(this.showQuestButton)		
+
+	// The show quest button appears only if the character can give you a quest.
+	if (npc.hasNewQuests && !npc.hasActiveQuests) {
+		this.showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
+			this.speechText.obj.position.x, 
+			this.speechText.obj.position.y + this.speechText.h + 20, null, clickable = true)
+		this.showQuestButton.mouseup = function() {
+			MenuTools.show("proposedQuestMenu")
+		}
+		this.addChild(this.showQuestButton)
+	}	
 }
 NpcDialogContainer.extends(ACEX.Actor, "NpcDialogContainer")
 

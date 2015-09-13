@@ -14,6 +14,7 @@
 // }
 
 Quest = function(name, desc, action, objType, xpReward, diamondsReward, objName, targetQta)  {
+	this.id = "QUEST_" + name + "_" + ACEX.Utils.randInt(100, 999) + ACEX.Utils.randInt(100, 999)
 	this.name = name
 	this.desc = desc
 	this.action = action
@@ -25,6 +26,7 @@ Quest = function(name, desc, action, objType, xpReward, diamondsReward, objName,
 	this.diamondsReward = diamondsReward || 0
 	this.completed = false
 	this.binding = null
+	gameVars.globalQuestList.push(this)
 }
 
 Quest.prototype.activate = function() {
@@ -73,6 +75,23 @@ Quest.prototype.completeQuest = function() {
 Quest.prototype.bindNpc = function(npc) {
 	this.binding = npc
 }
+
+Quest.prototype.accept = function() {
+	if (this.binding) {
+		this.binding.hasNewQuests = false
+		this.binding.hasActiveQuests = true
+	}
+	gameVars.player.activeQuests.push(this)
+}
+
+Quest.prototype.abandon = function() {
+	if (this.binding) {
+		this.binding.hasNewQuests = true
+		this.binding.hasActiveQuests = false
+	}
+	gameVars.player.removeQuest(this.id)
+}
+
 
 StandardKillQuest = function(name, desc, objType, xpReward, diamondsReward, qta) {
 	Quest.call(this, name, desc, "kill", objType, xpReward, diamondsReward, "", qta)

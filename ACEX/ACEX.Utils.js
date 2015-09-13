@@ -50,10 +50,22 @@ ACEX.Utils = {
 	generateActorId: function(type) {
 		type = type || "Actor"
 		return type + ACEX.Utils.randInt(100000, 999999) + ACEX.Utils.randInt(100000, 999999)
-	}
+	},
+	capitalize: function(str) {
+		return str.charAt(0).toUpperCase() + str.slice(1)
+	},
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color
 	// 	}
 	// },
+}
+
+ACEX.HtmlUtils = {
+	getInput: function(iName) {
+		return $("input[name='" + iName + "'").val()
+	},
+	setInput: function(iName, value) {
+		$("input[name='" + iName + "'").val(value)	
+	},
 }

@@ -73,9 +73,29 @@
                         <div><img src="resources/options.png"></div>
                         <div><span id="gameMenu_radialFireCooldown"></span></div>
                   </div> -->
-
-
             </div>
       </div>
+      <div id="journalMenu" class="acex acexHtmlWindow">
+            <h3>Journal</h3>
+            <div id="journalMenu_content">
+                  <!-- <div class="questContent">Quest content</div> -->
+                  <!-- <input type="hidden" name="questId" value=""/> -->
+                  <!-- <div class="questAbandon acexHtmlButton" onclick="MenuTools.abandonQuest()">Abandon</div> -->
+            </div>
+<!--             <div id="questBrowserPanel">
+                  <div class="questNext acexHtmlButton" onclick="MenuTools.browseQuest(1)">NEXT</div>|
+                  <div class="questPrev acexHtmlButton" onclick="MenuTools.browseQuest(-1)">PREV</div>
+            </div> -->
+      </div>
+      <div id="proposedQuestMenu" class="acex acexHtmlWindow">
+            <h3>Proposed Quest</h3>
+            <div id="currentCharacterQuest">
+                  <div class="questContent">Quest content</div>
+                  <input type="hidden" name="proposedQuestId" value=""/>
+                  <div class="questAccept acexHtmlButton" onclick="MenuTools.acceptQuest()">Accept</div>
+                  <div class="questRefuse acexHtmlButton" onclick="MenuTools.refuseQuest()">Refuse</div>
+            </div>
+      </div>
+
 </body>
 </html>

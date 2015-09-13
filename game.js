@@ -7,6 +7,7 @@ gameVars.cameraShake = null
 gameVars.player = null
 gameVars.cameraShake = null
 gameVars.activeMissions = []
+gameVars.globalQuestList = []
 
 
 var gameView
@@ -50,7 +51,6 @@ function define_game() {
 	// hitAreaLayer.obj.addChild(o)
 	hitAreaLayer.setRectHitArea(0, 0, acex.sw, acex.sh, false)
 	hitAreaLayer.mouseup = function(posdata) {
-			console.log(posdata)
 			if (!gameView.paused) {
 				gameVars.interactLogic.setTarget(posdata)
 			}		
@@ -94,6 +94,8 @@ function define_game() {
 
 	//Repositioning html menus
 	MenuTools.center("gameMenu")
+	MenuTools.center("proposedQuestMenu")
+	MenuTools.center("journalMenu")
 
 	gameView.play()
 	// gameMenuView.pause()
@@ -139,17 +141,31 @@ function setupHudLayer() {
 	hudObjects.optionsIcon.mouseup = function() {
 		if (gameView.paused) {
 			//gameMenuView.pause()
-			MenuTools.hideGameMenu()
+			MenuTools.hide("gameMenu")
 			gameView.play()
 
 		}else {
 			gameView.pause()
-			MenuTools.showGameMenu()
-
+			MenuTools.show("gameMenu")
 		}
 	}
+	hudLayer.addChild(hudObjects.optionsIcon)	
+	hudObjects.journalIcon = new ACEX.BText("", 0xffcc00, 80, acex.sh - 100, 
+		'resources/options.png', clickable = true)
+	hudObjects.journalIcon.mouseup = function() {
+		if (gameView.paused) {
+			MenuTools.hide("journalMenu")
+			gameView.play()
+		}else {
+			gameView.pause()
+			MenuTools.show("journalMenu")
+		}
+	}
+	hudLayer.addChild(hudObjects.journalIcon)
 
-	hudLayer.addChild(hudObjects.optionsIcon)
+
+
+
 	hudLayer.addChild(hudObjects.xpBar)
 	hudLayer.addChild(hudObjects.lifeBar)
 	hudLayer.addChild(hudObjects.diamonds)
