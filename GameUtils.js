@@ -17,7 +17,8 @@ GameUtils = {
     	var rf = fn[ACEX.Utils.randInt(0, fn.length - 1)]
     	return rf + " " + rl
 	},
-	findQuest: function(qId) {
+	findQuest: function(qId, from) {
+		from = from || gameVars.globalQuestList
 		for (var i in gameVars.globalQuestList) {
 			var q = gameVars.globalQuestList[i]
 			if (q.id == qId) {
@@ -58,10 +59,10 @@ MenuTools = {
 	},
 	refreshJournalMenu: function() {
 		var html = ""
-		for (var i in gameVars.player.activeQuests) {
-			var q = gameVars.player.activeQuests[i]
+		for (var i in gameVars.questsLogic.quests) {
+			var q = gameVars.questsLogic.quests[i]
 			html += ""+
-				"<div>\n" +
+				"<div class='questContainer'>\n" +
 				"	<div class='questContent'>" + q.name + "</div>\n" +
 				"   <div class='questAbandon acexHtmlButton' onclick='MenuTools.abandonQuest(\"" + q.id + "\")'>Abandon</div>\n" + 
 				"</div>\n"
@@ -110,4 +111,14 @@ MenuTools = {
 		$("#" + id).css("left", (cOff.left + acex.sw/2 - w/2) + "px")
 		$("#" + id).css("top", (cOff.top + acex.sh/2 - h/2) + "px")
 	},
+}
+
+// Commands useful launched by console, for tests and other purposes
+ConsoleUtils = {
+	addKillQuests: function(qta) {
+		for (var i = 0; i < qta; i++) {
+			var q = new StandardKillQuest("test quest kill" + ACEX.Utils.randInt(0, 1000), "desc kill !!!", "Bug", 100, 0, 2)
+			q.accept()
+		}
+	}
 }

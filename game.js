@@ -203,7 +203,7 @@ function setObjects() {
 
 	// Adding a test quest
 	var testQuest = new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)
-	testQuest.activate()
+	testQuest.accept()
 
 
 	//Adding an npc near the player

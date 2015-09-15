@@ -38,3 +38,13 @@ body {
 	text-align: center;
 	border: 1px solid gray;
 }
+
+.questContainer {
+	border-bottom: 1px solid white;
+}
+
+#journalMenu_content {
+	height: 80%;
+	overflow-y: scroll;
+
+}

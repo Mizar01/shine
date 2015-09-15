@@ -154,6 +154,17 @@ QuestsLogic.prototype.addQuest = function(quest) {
 	this.quests.push(quest)
 	console.log("Initiated quest: " + quest.name + ": " + quest.action + " " + quest.targetQta + " " + quest.objType + "/s")
 }
+
+QuestsLogic.prototype.removeQuest = function(qId) {
+	for (var i in this.quests) {
+		var q = this.quests[i]
+		if (q.id == qId) {
+			this.quests.splice(i, 1)
+			break
+		}
+	}
+}
+
 QuestsLogic.prototype.run = function() {
 	if (this.eventsToCheck.length <= 0) {
 		return
@@ -179,6 +190,7 @@ QuestsLogic.prototype.addEvent = function(action, objType, objName, amount) {
 		amount: amount,
 	})
 }
+
 
 
 // MissionLogic = function(missionId) {

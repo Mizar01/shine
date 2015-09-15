@@ -19,7 +19,6 @@ Player = function() {
 	this.shootRadius = 100
 	this.diamonds = 0
 	this.collisionRange = 10
-	this.activeQuests = []
 }
 
 Player.extends(ACEX.Actor, "Player")
@@ -165,14 +164,4 @@ Player.prototype.addXpFromEnemy = function(e) {
 
 Player.prototype.addDiamond = function() {
 	this.diamonds++
-}
-
-Player.prototype.removeQuest = function(qId) {
-	for (var i in this.activeQuests) {
-		var q = this.activeQuests[i]
-		if (q.id == qId) {
-			this.activeQuests.splice(i, 1)
-			break
-		}
-	}
 }

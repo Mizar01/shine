@@ -33,7 +33,6 @@ Quest.prototype.activate = function() {
 	if (this.binding != null) {
 		this.binding.hasActiveQuests = true
 	}
-	gameVars.questsLogic.addQuest(this)
 }
 /** 
  * This function can be overwritten.
@@ -81,7 +80,7 @@ Quest.prototype.accept = function() {
 		this.binding.hasNewQuests = false
 		this.binding.hasActiveQuests = true
 	}
-	gameVars.player.activeQuests.push(this)
+	gameVars.questsLogic.addQuest(this)
 }
 
 Quest.prototype.abandon = function() {
@@ -89,7 +88,8 @@ Quest.prototype.abandon = function() {
 		this.binding.hasNewQuests = true
 		this.binding.hasActiveQuests = false
 	}
-	gameVars.player.removeQuest(this.id)
+
+	gameVars.questsLogic.removeQuest(this.id)
 }
 
 
