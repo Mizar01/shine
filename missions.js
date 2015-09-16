@@ -13,7 +13,7 @@
 // 	xpReward: 300
 // }
 
-Quest = function(name, desc, action, objType, xpReward, diamondsReward, objName, targetQta)  {
+Quest = function(giver, name, desc, action, objType, xpReward, diamondsReward, objName, targetQta)  {
 	this.id = "QUEST_" + name + "_" + ACEX.Utils.randInt(100, 999) + ACEX.Utils.randInt(100, 999)
 	this.name = name
 	this.desc = desc
@@ -25,7 +25,7 @@ Quest = function(name, desc, action, objType, xpReward, diamondsReward, objName,
 	this.xpReward = xpReward
 	this.diamondsReward = diamondsReward || 0
 	this.completed = false
-	this.binding = null
+	this.binding = giver
 	gameVars.globalQuestList.push(this)
 }
 
@@ -69,6 +69,9 @@ Quest.prototype.completeQuest = function() {
 	console.log("Quest " + this.name + " is complete. Earned " + this.xpReward + "xp and " + this.diamondsReward + " diamonds")
 	gameVars.player.addXp(this.xpReward)
 	gameVars.player.diamonds += this.diamondsReward
+	if (this.binding) {
+		this.binding.currentQuestCompleted()
+	}
 }
 
 Quest.prototype.bindNpc = function(npc) {
@@ -77,8 +80,7 @@ Quest.prototype.bindNpc = function(npc) {
 
 Quest.prototype.accept = function() {
 	if (this.binding) {
-		this.binding.hasNewQuests = false
-		this.binding.hasActiveQuests = true
+		this.binding.currentQuestAccepted()
 	}
 	gameVars.questsLogic.addQuest(this)
 }
@@ -93,8 +95,9 @@ Quest.prototype.abandon = function() {
 }
 
 
-StandardKillQuest = function(name, desc, objType, xpReward, diamondsReward, qta) {
-	Quest.call(this, name, desc, "kill", objType, xpReward, diamondsReward, "", qta)
+StandardKillQuest = function(giver, objType, xpReward, diamondsReward, qta) {
+	var nameDesc = _polygen.generateKillQuestNameDesc()
+	Quest.call(this, giver, nameDesc[0], nameDesc[1], "kill", objType, xpReward, diamondsReward, "", qta)
 }
 StandardKillQuest.extends(Quest, "StandardKillQuest")
 

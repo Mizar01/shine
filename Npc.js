@@ -7,14 +7,14 @@ Npc = function(name, x, y) {
 	this.name = name
 	this.obj = new PIXI.Graphics()
 	this.textObj = new PIXI.BitmapText("",  {font: "35px Impact"})
-	this.redraw()
+	this.questCount = 1
 	this.setCircleHitArea(0, 0, 25)
 	this.obj.position.set(x, y)
 	this.hasActiveQuests = false
 	this.hasNewQuests = true
 	this.questQueueMax = 10
-	this.currentQuest = new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)
-	this.currentQuest.bindNpc(this)
+	this.currentQuest = new StandardKillQuest(this, "Bug", 100, 0, 2)
+	this.redraw()
 }
 
 Npc.extends(ACEX.Actor, "Npc")
@@ -39,33 +39,63 @@ Npc.prototype.mouseup = function() {
 }
 
 Npc.prototype.run = function() {
-	this.refreshIndicator()
 }
 
 Npc.prototype.refreshIndicator = function() {
-	var t = this.textObj.text
-	var refreshText = true
-	if (t == "" && !this.hasActiveQuests && this.hasNewQuests) {
-		return
-	}
-	if (t != "?" && this.hasActiveQuests) {
-		this.textObj.setText("?")
-		return
-	}
-	if (t != "!" && this.hasNewQuests) {
-		this.textObj.setText("!")
-		return
-	}
+
+	// this.textObj.setText("" + this.questCount)
+	// this.textObj.tint = 0xffff00
+	// if (this.hasActiveQuests) {
+	// 	this.textObj.tint = 0x333333
+	// }
+
+	// if (t != "?" && this.hasActiveQuests) {
+	// 	this.textObj.setText()
+	// 	return
+	// }
+	// if (t != "!" && this.hasNewQuests) {
+	// 	this.textObj.setText(this.questCount)
+	// 	return
+	// }
 }
 
 Npc.prototype.redraw = function() {
-	this.obj.beginFill(0x0000AA)
-	this.obj.lineStyle(1, 0xaaaaff)
+
+	var qc = "" + this.questCount
+	this.obj.clear()
+	this.obj.beginFill(0x006600)
+	if (this.hasActiveQuests) {
+		this.obj.lineStyle(2, 0x333333)
+	}else {
+		this.obj.lineStyle(2, 0xffff00)
+	}
 	this.obj.drawCircle(0, 0, 25)
 	this.obj.endFill()
+	this.textObj.setText(qc)
 	this.textObj.tint = 0xffff00
-	this.textObj.position.set(-3, -20) 
+	if (this.hasActiveQuests) {
+		this.textObj.tint = 0x333333
+	}
+	this.textObj.position.set(-5 -  6 * (qc.length - 1), -20) 
 	this.obj.addChild(this.textObj)
+
+
+
+}
+
+Npc.prototype.currentQuestAccepted = function() {
+	this.hasActiveQuests = true
+	this.hasNewQuests = false
+	this.redraw()
+}
+
+Npc.prototype.currentQuestCompleted = function() {
+console.log("*******currentQuestCompleted*********")
+	this.hasActiveQuests = false
+	this.hasNewQuests = true
+	this.currentQuest = new StandardKillQuest(this, "Bug", 100, 0, 2)
+	this.questCount++
+	this.redraw()
 }
 
 

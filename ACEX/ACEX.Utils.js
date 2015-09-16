@@ -54,6 +54,10 @@ ACEX.Utils = {
 	capitalize: function(str) {
 		return str.charAt(0).toUpperCase() + str.slice(1)
 	},
+	// returns a random item from a list
+	randomItem: function(list) {
+		return list[ACEX.Utils.randInt(0, list.length - 1)]
+	},
 	// colorBitmapText: function(btext, color) {
 	// 	for (ci in btext.children) {
 	// 		btext.children[ci].tint = color

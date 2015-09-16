@@ -22,12 +22,21 @@ hudObjects = []  //globally accessible storage for some variables and objects
 
 var testObject = null
 
+var _polygenEngineType = "JS" // if 'PHP' , it will make a call to phpolygen
+var _polygen
+
 
 function init() {
 	assets = [
 		'resources/impact.fnt',
 		'resources/options.png'
 	]
+	if (_polygenEngineType == 'JS') {
+		_polygen = JSPolygen
+	}
+	if (_polygenEngineType == 'PHP') {
+		_polygen = PHPolygen
+	}
 	new ACEX(1860, 900, assets, "define_game")
 }
 
@@ -116,13 +125,13 @@ function setupHudLayer() {
 		})
 	hudObjects.xpBar.addPrePostText("xp", "lvl. 1")
 
-	hudObjects.lifeBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.08, acex.sw * 0.25, acex.sh * 0.03,
+	hudObjects.lifeBar = new ACEX.Bar(acex.sw * 0.7, acex.sh * 0.055, acex.sw * 0.25, acex.sh * 0.02,
 		function() {
 			this.setPartialTotal(gameVars.player.life, gameVars.player.maxLife)
 		},
 		true, 0.3)
 
-	hudObjects.diamonds = new ACEX.BText("Diamonds: 0", 0x00ff00, acex.sw * 0.9, acex.sh * 0.12, null, false,
+	hudObjects.diamonds = new ACEX.BText("Diamonds: 0", 0x00ff00, acex.sw * 0.9, acex.sh * 0.08, null, false,
 		{"size": "15px", "font": "Impact"})
 	hudObjects.diamonds.update = function() {
 		this.updateText("Diamonds: " + gameVars.player.diamonds)
@@ -202,100 +211,29 @@ function setObjects() {
 	gameLayer.addChild(testOB)
 
 	// Adding a test quest
-	var testQuest = new StandardKillQuest("test quest kill", "desc kill !!!", "Bug", 100, 0, 2)
-	testQuest.accept()
+	//var testQuest = new StandardKillQuest(null, "Bug", 100, 0, 2)
+	//testQuest.accept()
 
 
 	//Adding an npc near the player
-	gameLayer.addChild(new Npc(GameUtils.randomName(), 
+	var testNpc = new Npc(GameUtils.randomName(), 
 		p.obj.position.x + 100, 
 		p.obj.position.y
 		)
-	)
-
-	// Test for mouse up
-	// BText
-	// var testBText = new ACEX.BText("Test BText", 0x00ff00, acex.sw * 0.3, acex.sh * 0.3, null, true,
-	// 	{"size": "15px", "font": "Impact"})
-
-	// testBText.mouseup = function() {
-	// 	this.setForRemoval()
-	// }
-	// hudLayer.addChild(testBText)
-	// SpeechText
-	// var npcDialog = new ACEX.Actor()
-	// npcDialog.obj = new PIXI.DisplayObjectContainer
-	// npcDialog.speechText = new ACEX.SpeechText("Test Speech Text")
-	// npcDialog.showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
-	// 	0, npcDialog.speechText.obj.position.y + 20, null, clickable = true)
-	// npcDialog.showQuestButton.mouseup = function() { console.log("hello") }
-	// npcDialog.addChild(npcDialog.speechText)
-	// npcDialog.addChild(npcDialog.showQuestButton)
-
-	// hudLayer.addChild(npcDialog)
-
+	gameLayer.addChild(testNpc)
+	testObject = testNpc
 }
 
-// function addMission(missionId) {
-// 	var m = new MissionLogic(missionId)
-// 	gameVars.activeMissions[missionId] = 1
-// 	console.log("added mission " + missionId)
-// 	gameView.addLogic(m)
-// }
+JSPolygen = {
+	generateKillQuestNameDesc: function() {
+		var r1 = ['Avenge my people', 'Ruthless Revenge', 'Eradicate plague', 'Death to unfaithfuls', 'Fields of damned',
+			'Call to arms', 'Too suffering, but not too much', 'I feel sorry, but I can\'t stop it']
+		var r2 = ['Please help me. I\'m really in danger', "I hate people like you, but those are worse.", "They killed all my family, slowly.",
+			"Ruining someone's isn't enough, you can do better.", "I will give you my gratitude and my xp reward."]
+		return [ACEX.Utils.randomItem(r1), ACEX.Utils.randomItem(r2)]
+	},
+}
 
-// function removeMission(missionId) {
-// 	gameView.removeLogic(missionId)
-// 	console.log("removed mission " + missionId)
-// 	delete gameVars.activeMissions[missionId]
-// }
-
-// function setupGameMenus() {
-// 	gameVars.gameMenu = new ACEX.Window("Game Menu", 400,  300)
-// 	gameVars.gameMenu.center()
-// 	gameMenuLayer.addChild(gameVars.gameMenu)
-// }
-
-// function EventLog() {
-// 	this.maxQueue = 20
-// 	this.events = []
-// 	this.addEvent = function(action, objType, objName, amount) {
-// 		objName = objName || ""
-// 		amount = amount || 1
-// 		var t = new Date().getTime()
-// 		if (this.events.length > this.maxQueue) {
-// 			this.events.splice(0, 1)
-// 		}
-// 		this.events.push({
-// 			time: t, 
-// 			action: action, 
-// 			objType: objType,
-// 			objName: objName,
-// 			amount: amount,
-// 		})
-// 	}
-// 	/**
-// 	 * Return the number of events checked and the last time registerd
-// 	 */
-// 	this.checkEvents = function(afterTime, action, objType, objName, amount) {
-// 		objName = objName || ""
-// 		amount = amount || 1
-// 		var maxTime = afterTime
-// 		var numFound = 0
-// 		for (var i in this.events) {
-// 			var e  = this.events[i]
-// 			//console.log(e)
-// 			if (e.time >= afterTime &&
-// 				e.action == action &&
-// 				e.objType == objType &&
-// 				(objName == "" || e.objName == objName) &&
-// 				e.amount == amount) {
-// 				numFound++
-// 				if (e.time > maxTime) {
-// 					maxTime = e.time
-// 				}
-// 			}
-// 		}
-// 		return {n: numFound, nextTime: maxTime}
-// 	}
-// }
-
+PHPolygen = {
+	// TODO
+}
