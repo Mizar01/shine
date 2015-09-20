@@ -64,6 +64,7 @@ MenuTools = {
 			html += ""+
 				"<div class='questContainer'>\n" +
 				"	<div class='questContent'>" + q.name + "</div>\n" +
+				"   <div class='questCurrentObjective'>(" + q.currentObjective + ":" + q.currentQta + "/" + q.targetQta +")</div>\n" + 
 				"   <div class='questAbandon acexHtmlButton' onclick='MenuTools.abandonQuest(\"" + q.id + "\")'>Abandon</div>\n" + 
 				"</div>\n"
 		}
@@ -72,7 +73,9 @@ MenuTools = {
 	refreshProposedQuestMenu: function() {
 		var cc = gameVars.npcDialogContainer.proposedQuest
 		ACEX.HtmlUtils.setInput("proposedQuestId", cc.id)
-		$("#currentCharacterQuest .questContent").html(cc.name)
+		$("#currentCharacterQuest .questName").html(cc.name)
+		$("#currentCharacterQuest .questCurrentObjective").html("(" + cc.currentObjective + ")")
+		$("#currentCharacterQuest .questDescription").html(cc.desc)
 		gameVars.npcDialogContainer.close()
 	},
 	// showGameMenu: function() {

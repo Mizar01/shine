@@ -13,7 +13,7 @@ Npc = function(name, x, y) {
 	this.hasActiveQuests = false
 	this.hasNewQuests = true
 	this.questQueueMax = 10
-	this.currentQuest = new StandardKillQuest(this, "Bug", 100, 0, 2)
+	this.currentQuest = new StandardKillQuest(this, "Bug", 100, 0, 10)
 	this.redraw()
 }
 

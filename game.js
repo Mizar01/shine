@@ -131,7 +131,7 @@ function setupHudLayer() {
 		},
 		true, 0.3)
 
-	hudObjects.diamonds = new ACEX.BText("Diamonds: 0", 0x00ff00, acex.sw * 0.9, acex.sh * 0.08, null, false,
+	hudObjects.diamonds = new ACEX.BText("Diamonds: 0", 0x00ff00, acex.sw * 0.93, acex.sh * 0.08, null, false,
 		{"size": "15px", "font": "Impact"})
 	hudObjects.diamonds.update = function() {
 		this.updateText("Diamonds: " + gameVars.player.diamonds)

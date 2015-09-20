@@ -13,6 +13,10 @@
       <script src="ACEX/ACEX.SpeechText.js"></script>
       <script src="ACEX/ACEX.Bar.js"></script>
       <script src="ACEX/ACEX.RadiusBar.js"></script>
+
+
+
+
       <!-- Game related libraries -->
       <script src="jquery-2.1.1.min.js"></script>
       <script src="GameUtils.js"></script>
@@ -27,8 +31,11 @@
       <script src="logics.js"></script>
       <script src="explosions.js"></script>
       <script src="enemies.js"></script>
-      <script src="missions.js"></script>
+      <script src="quests.js"></script>
       <script src="game.js"></script>
+
+      <link href="../bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+      <link href="../bootstrap-3.3.5-dist/css/bootstrap-theme.min.css" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body onload="init()">
@@ -76,17 +83,25 @@
             </div>
       </div>
       <div id="journalMenu" class="acex acexHtmlWindow">
-            <h3>Journal</h3>
+            <h1>Journal</h1>
             <div id="journalMenu_content">
             </div>
       </div>
       <div id="proposedQuestMenu" class="acex acexHtmlWindow">
             <h3>Proposed Quest</h3>
             <div id="currentCharacterQuest">
-                  <div class="questContent">Quest content</div>
+                  <div class="questName"></div>
+                  <div class="questCurrentObjective"></div>
+                  <div class="questDescription"></div>
                   <input type="hidden" name="proposedQuestId" value=""/>
-                  <div class="questAccept acexHtmlButton" onclick="MenuTools.acceptQuest()">Accept</div>
-                  <div class="questRefuse acexHtmlButton" onclick="MenuTools.refuseQuest()">Refuse</div>
+                  <div class="row">
+                        <div class="col-md-4">
+                              <input type="button" class="btn btn-lg btn-primary" onclick="MenuTools.acceptQuest()" value="Accept">
+                        </div>
+                        <div class="col-md-4 col-md-offset-4">
+                              <input type="button" class="btn btn-lg btn-primary" onclick="MenuTools.refuseQuest()" value="Refuse">
+                        </div>
+                  </div>
             </div>
       </div>
 
