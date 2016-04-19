@@ -9,6 +9,8 @@ gameVars.cameraShake = null
 gameVars.activeMissions = []
 gameVars.globalQuestList = []
 
+var currentPopupWindow = ""
+
 
 var gameView
 var hitAreaLayer
@@ -62,6 +64,12 @@ function define_game() {
 	hitAreaLayer.mouseup = function(posdata) {
 			if (!gameView.paused) {
 				gameVars.interactLogic.setTarget(posdata)
+			}
+			if (gameView.paused) {
+				// The click will only work outside the popup divs,
+				// so this can be used to close those popups in an alternative 
+				// and faster way.
+				manageWindowPlayPause(currentPopupWindow)
 			}		
 	}
 
@@ -148,27 +156,13 @@ function setupHudLayer() {
 	hudObjects.optionsIcon = new ACEX.BText("", 0xffcc00, 40, acex.sh - 100, 
 		'resources/options.png', clickable = true)
 	hudObjects.optionsIcon.mouseup = function() {
-		if (gameView.paused) {
-			//gameMenuView.pause()
-			MenuTools.hide("gameMenu")
-			gameView.play()
-
-		}else {
-			gameView.pause()
-			MenuTools.show("gameMenu")
-		}
+		manageWindowPlayPause("gameMenu")
 	}
 	hudLayer.addChild(hudObjects.optionsIcon)	
 	hudObjects.journalIcon = new ACEX.BText("", 0xffcc00, 80, acex.sh - 100, 
 		'resources/options.png', clickable = true)
 	hudObjects.journalIcon.mouseup = function() {
-		if (gameView.paused) {
-			MenuTools.hide("journalMenu")
-			gameView.play()
-		}else {
-			gameView.pause()
-			MenuTools.show("journalMenu")
-		}
+		manageWindowPlayPause("journalMenu")
 	}
 	hudLayer.addChild(hudObjects.journalIcon)
 
@@ -179,6 +173,16 @@ function setupHudLayer() {
 	hudLayer.addChild(hudObjects.lifeBar)
 	hudLayer.addChild(hudObjects.diamonds)
 	hudLayer.addChild(hudObjects.radialCooldownBar)
+}
+
+function manageWindowPlayPause(menuName) {
+	if (gameView.paused && currentPopupWindow == menuName) {
+		MenuTools.hide(menuName)
+		gameView.play()
+	}else if (currentPopupWindow == "") {
+		gameView.pause()
+		MenuTools.show(menuName)
+	}
 }
 
 function setObjects() {

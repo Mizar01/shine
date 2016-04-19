@@ -32,9 +32,11 @@ MenuTools = {
 	show: function(menuName) {
 		MenuTools["refresh" + ACEX.Utils.capitalize(menuName)]()
 		$("#" + menuName).show()
+		currentPopupWindow = menuName
 	},
 	hide: function(menuName) {
 		$("#" + menuName).hide()
+		currentPopupWindow = ""
 	},
 	upgradeRadialFireCooldown: function() {
 		gameVars.player.upgradeProperty("radialCooldown.maxTime", "sub", 0.3, 1, true, 1)
