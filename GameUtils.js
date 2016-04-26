@@ -98,12 +98,12 @@ MenuTools = {
 		// find the npc with this questId
 		var q = GameUtils.findQuest(cId)
 		q.accept()
-		$("#proposedQuestMenu").hide()
+		MenuTools.hide("proposedQuestMenu")
 		console.log("Accepted mission " + q.name)
 		// TODO : show some message on screen (a toast)
 	},	
 	refuseQuest: function() {
-		$("#proposedQuestMenu").hide()
+		MenuTools.hide("proposedQuestMenu")
 
 	},	
 	browseQuest: function(direction) {
