@@ -2,12 +2,13 @@
 var targetCursor = null
 var setTargetRequested = false
 
-var gameVars = []
-gameVars.cameraShake = null
-gameVars.player = null
-gameVars.cameraShake = null
-gameVars.activeMissions = []
-gameVars.globalQuestList = []
+var gameVars = {
+	cameraShake: null,
+	player: null,
+	activeMissions: [],
+	globalQuestList: [],
+	currentNpc: null,
+}
 
 var currentPopupWindow = ""
 
@@ -113,6 +114,7 @@ function define_game() {
 	MenuTools.center("gameMenu")
 	MenuTools.center("proposedQuestMenu")
 	MenuTools.center("journalMenu")
+	MenuTools.center("npcDialog")
 
 	gameView.play()
 	// gameMenuView.pause()
@@ -175,13 +177,13 @@ function setupHudLayer() {
 	hudLayer.addChild(hudObjects.radialCooldownBar)
 }
 
-function manageWindowPlayPause(menuName) {
-	if (gameView.paused && currentPopupWindow == menuName) {
-		MenuTools.hide(menuName)
+function manageWindowPlayPause(dialogName) {
+	if (gameView.paused && currentPopupWindow == dialogName) {
+		MenuTools.hide(dialogName)
 		gameView.play()
 	}else if (currentPopupWindow == "") {
 		gameView.pause()
-		MenuTools.show(menuName)
+		MenuTools.show(dialogName)
 	}
 }
 

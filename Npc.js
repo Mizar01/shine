@@ -14,28 +14,39 @@ Npc = function(name, x, y) {
 	this.hasNewQuests = true
 	this.questQueueMax = 10
 	this.currentQuest = new StandardKillQuest(this, "Bug", 100, 0, 10)
+
+	this.dialogMessage = ""
 	this.redraw()
 }
 
 Npc.extends(ACEX.Actor, "Npc")
 
 Npc.prototype.mouseup = function() {
+	var txt = "Hello ! My name is " + this.name + "."
+	if (this.hasActiveQuests && !this.currentQuest.completed) {
+		txt += " Sorry. You have to complete the quest " + this.currentQuest.name + " before I can give you other tasks."
+	}
+	this.dialogMessage = txt
+	gameVars.currentNpc = this
+	manageWindowPlayPause("npcDialog")
 	// if a dialog is already opened for another npc, it closes that one and open this.
-	var forceOpen = false
+/*	var forceOpen = false
 	var npcDg = gameVars["npcDialogContainer"]
 	if (npcDg != null && npcDg.npcId != this.id) {
 		npcDg.close()
 		forceOpen = true
 	}
 	if (npcDg == null || forceOpen) {
+
 		var txt = "Hello ! My name is " + this.name + "."
 		if (this.hasActiveQuests && !this.currentQuest.completed) {
 			txt += " Sorry. You have to complete the quest " + this.currentQuest.name + " before I can give you other tasks."
 		}
 		var newNpcDg = new NpcDialogContainer(txt, this)
 		gameVars["npcDialogContainer"] = newNpcDg
+		gameView.pause()
 		hudLayer.addChild(newNpcDg)
-	}
+	}*/
 }
 
 Npc.prototype.run = function() {
@@ -99,32 +110,32 @@ console.log("*******currentQuestCompleted*********")
 }
 
 
-NpcDialogContainer = function(txt, npc) {
-	ACEX.Actor.call(this)
-	this.npcId = npc.id
-	this.proposedQuest = npc.currentQuest
-	this.obj = new PIXI.DisplayObjectContainer()
-	this.speechText = new ACEX.SpeechText(txt)
-	this.speechText.mouseup = function() {
-		gameVars.npcDialogContainer.close()
-	}
-	this.addChild(this.speechText)
+// NpcDialogContainer = function(txt, npc) {
+// 	ACEX.Actor.call(this)
+// 	this.npcId = npc.id
+// 	this.proposedQuest = npc.currentQuest
+// 	this.obj = new PIXI.DisplayObjectContainer()
+// 	this.speechText = new ACEX.SpeechText(txt)
+// 	this.speechText.mouseup = function() {
+// 		gameVars.npcDialogContainer.close()
+// 	}
+// 	this.addChild(this.speechText)
 
-	// The show quest button appears only if the character can give you a quest.
-	if (npc.hasNewQuests && !npc.hasActiveQuests) {
-		this.showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
-			this.speechText.obj.position.x, 
-			this.speechText.obj.position.y + this.speechText.h + 20, null, clickable = true)
-		this.showQuestButton.mouseup = function() {
-			MenuTools.show("proposedQuestMenu")
-		}
-		this.addChild(this.showQuestButton)
-	}	
-}
-NpcDialogContainer.extends(ACEX.Actor, "NpcDialogContainer")
+// 	// The show quest button appears only if the character can give you a quest.
+// 	if (npc.hasNewQuests && !npc.hasActiveQuests) {
+// 		this.showQuestButton = new ACEX.BText("Show Quest", 0xffcc00, 
+// 			this.speechText.obj.position.x, 
+// 			this.speechText.obj.position.y + this.speechText.h + 20, null, clickable = true)
+// 		this.showQuestButton.mouseup = function() {
+// 			MenuTools.show("proposedQuestMenu")
+// 		}
+// 		this.addChild(this.showQuestButton)
+// 	}	
+// }
+// NpcDialogContainer.extends(ACEX.Actor, "NpcDialogContainer")
 
-NpcDialogContainer.prototype.close = function() {
-	this.setForRemoval()
-	gameVars["npcDialogContainer"] = null
-}
+// NpcDialogContainer.prototype.close = function() {
+// 	this.setForRemoval()
+// 	gameVars["npcDialogContainer"] = null
+// }
 

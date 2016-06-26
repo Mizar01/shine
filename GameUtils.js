@@ -29,13 +29,13 @@ GameUtils = {
 }
 
 MenuTools = {
-	show: function(menuName) {
-		MenuTools["refresh" + ACEX.Utils.capitalize(menuName)]()
-		$("#" + menuName).show()
-		currentPopupWindow = menuName
+	show: function(dialogName) {
+		MenuTools["refresh" + ACEX.Utils.capitalize(dialogName)]()
+		$("#" + dialogName).show()
+		currentPopupWindow = dialogName
 	},
-	hide: function(menuName) {
-		$("#" + menuName).hide()
+	hide: function(dialogName) {
+		$("#" + dialogName).hide()
 		currentPopupWindow = ""
 	},
 	upgradeRadialFireCooldown: function() {
@@ -73,12 +73,20 @@ MenuTools = {
 		$("#journalMenu_content").html(html)
 	},	
 	refreshProposedQuestMenu: function() {
-		var cc = gameVars.npcDialogContainer.proposedQuest
+		var cc = gameVars.currentNpc.currentQuest
 		ACEX.HtmlUtils.setInput("proposedQuestId", cc.id)
 		$("#currentCharacterQuest .questName").html(cc.name)
 		$("#currentCharacterQuest .questCurrentObjective").html("(" + cc.currentObjective + ")")
 		$("#currentCharacterQuest .questDescription").html(cc.desc)
-		gameVars.npcDialogContainer.close()
+		MenuTools.hide("npcDialog")
+	},
+	refreshNpcDialog: function() {
+		$("input[name=showQuestButton]").hide() //Preventively hides the show Quest button
+		var npc = gameVars.currentNpc
+		$("#npcDialog_content").html(npc.dialogMessage)
+		if (npc.hasNewQuests && !npc.hasActiveQuests) {
+			$("input[name=showQuestButton]").show()
+		}
 	},
 	// showGameMenu: function() {
 	// 	MenuTools.refreshGameMenu()
@@ -103,7 +111,7 @@ MenuTools = {
 		// TODO : show some message on screen (a toast)
 	},	
 	refuseQuest: function() {
-		MenuTools.hide("proposedQuestMenu")
+		manageWindowPlayPause("proposedQuestMenu")
 
 	},	
 	browseQuest: function(direction) {
