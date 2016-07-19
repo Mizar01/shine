@@ -115,13 +115,12 @@ MenuTools = {
 		// find the npc with this questId
 		var q = GameUtils.findQuest(cId)
 		q.accept()
-		manageWindowPlayPause("proposedQuestMenu")
+		ModalUtils.hide()
 		console.log("Accepted mission " + q.name)
 		// TODO : show some message on screen (a toast)
 	},	
 	refuseQuest: function() {
-		manageWindowPlayPause("proposedQuestMenu")
-
+		ModalUtils.hide()
 	},	
 	browseQuest: function(direction) {
 		// TODO: load inside #questContent the next or prev. quest in the player list.
@@ -184,12 +183,12 @@ ModalUtils = {
 
 HtmlUtils = {
 	buildHtmlUpgrade: function(name, desc, value) {
-		var htmlInit = "<div class='row'>"
+		var htmlInit = "<p class='row'>"
 		var text = "<div class='text-default col-md-8'>" + desc + "</div>"
 		var btn = HtmlUtils.buildButton("MenuTools.upgrade" + ACEX.Utils.capitalize(name) + "()", ">>", 
 			"btn btn-danger btn-xs col-md-2")
 		var value = "<div class='col-md-2'>" + value + "</div>"
-		var htmlEnd = "</div>"
+		var htmlEnd = "</p>"
 		return htmlInit + text + btn + value + htmlEnd
 	},
 	buildButton: function(onclick, value, cls) {

@@ -28,6 +28,9 @@ var testObject = null
 var _polygenEngineType = "JS" // if 'PHP' , it will make a call to phpolygen
 var _polygen
 
+$(function() {
+	init()
+})
 
 function init() {
 	assets = [
@@ -41,6 +44,10 @@ function init() {
 		_polygen = PHPolygen
 	}
 	new ACEX(1860, 900, assets, "define_game")
+
+	$('#defaultModalWindow').on('hidden.bs.modal', function () {
+		manageWindowPlayPause()
+	})
 }
 
 function define_game() {
