@@ -97,6 +97,7 @@ function define_game() {
 
 	// XXX : For tests ONLY
 	gameVars.player.addXp(1000)
+	gameVars.player.diamonds = 100
 
 	//Adding some random turrets in the map
 	setObjects()
@@ -178,10 +179,10 @@ function setupHudLayer() {
 }
 
 function manageWindowPlayPause(dialogName) {
-	if (gameView.paused && currentPopupWindow == dialogName) {
-		MenuTools.hide(dialogName)
+	if (gameView.paused) {
+		MenuTools.hide()
 		gameView.play()
-	}else if (currentPopupWindow == "") {
+	}else {
 		gameView.pause()
 		MenuTools.show(dialogName)
 	}
@@ -243,3 +244,7 @@ JSPolygen = {
 PHPolygen = {
 	// TODO
 }
+
+
+
+

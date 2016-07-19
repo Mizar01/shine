@@ -31,12 +31,10 @@ GameUtils = {
 MenuTools = {
 	show: function(dialogName) {
 		MenuTools["refresh" + ACEX.Utils.capitalize(dialogName)]()
-		$("#" + dialogName).show()
-		currentPopupWindow = dialogName
+		ModalUtils.show()
 	},
-	hide: function(dialogName) {
-		$("#" + dialogName).hide()
-		currentPopupWindow = ""
+	hide: function() {
+		ModalUtils.hide()
 	},
 	upgradeRadialFireCooldown: function() {
 		gameVars.player.upgradeProperty("radialCooldown.maxTime", "sub", 0.3, 1, true, 1)
@@ -47,16 +45,23 @@ MenuTools = {
 		MenuTools.refreshGameMenu()
 	},
 	upgradeSpeed: function() {
-		gameVars.player.upgradeProperty("speed", "add", 0.01, 3, true, 1)
+		gameVars.player.upgradeProperty("speed", "add", 0.01, 5, true, 1)
 		MenuTools.refreshGameMenu()
 	},
 
 	refreshGameMenu: function() {
 		// $("#gameMenu_radialFireRate").text(ACEX.Utils.roundFloat(1 / gameVars.player.radialCooldown.maxTime, 3))
-		$("#gameMenu_radialFireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.radialCooldown.maxTime, 2))
-		$("#gameMenu_fireCooldown").text(ACEX.Utils.roundFloat(gameVars.player.cooldown.maxTime, 2))
-		$("#gameMenu_speed").text(ACEX.Utils.roundFloat(gameVars.player.speed, 2))
-		$("#gameMenu_diamonds").text(gameVars.player.diamonds)
+		var p = gameVars.player
+		var htmlUpgrades = [
+			HtmlUtils.buildHtmlUpgrade("RadialFireCooldown", "Radial Fire Cooldown", 
+				ACEX.Utils.roundFloat(p.radialCooldown.maxTime, 2)),
+			HtmlUtils.buildHtmlUpgrade("FireCooldown", "Fire Cooldown", 
+				ACEX.Utils.roundFloat(p.cooldown.maxTime, 2)),			
+			HtmlUtils.buildHtmlUpgrade("Speed", "Speed", 
+				ACEX.Utils.roundFloat(p.speed, 2)),
+		]
+		ModalUtils.setProperties("GameMenu", "Upgrades (" + p.diamonds + " diamonds left)", htmlUpgrades.join(""))
+
 
 	},
 	refreshJournalMenu: function() {
@@ -70,43 +75,47 @@ MenuTools = {
 				"   <div class='questAbandon acexHtmlButton' onclick='MenuTools.abandonQuest(\"" + q.id + "\")'>Abandon</div>\n" + 
 				"</div>\n"
 		}
-		$("#journalMenu_content").html(html)
+		ModalUtils.setProperties("JournalMenu", "Journal", html)
 	},	
 	refreshProposedQuestMenu: function() {
+		// var cc = gameVars.currentNpc.currentQuest
+		// ACEX.HtmlUtils.setInput("proposedQuestId", cc.id)
+		// $("#currentCharacterQuest .questName").html(cc.name)
+		// $("#currentCharacterQuest .questCurrentObjective").html("(" + cc.currentObjective + ")")
+		// $("#currentCharacterQuest .questDescription").html(cc.desc)
+		// MenuTools.hide("npcDialog")
 		var cc = gameVars.currentNpc.currentQuest
-		ACEX.HtmlUtils.setInput("proposedQuestId", cc.id)
-		$("#currentCharacterQuest .questName").html(cc.name)
-		$("#currentCharacterQuest .questCurrentObjective").html("(" + cc.currentObjective + ")")
-		$("#currentCharacterQuest .questDescription").html(cc.desc)
-		MenuTools.hide("npcDialog")
+		var htmlDesc = "<div class='text-default'>" + cc.desc + "</div>"
+		var htmlObj = "<div class='text-danger'>" + cc.currentObjective + "</div>"
+		ModalUtils.setProperties("ProposedQuestMenu", cc.name, htmlDesc + "\n" + htmlObj, [
+			HtmlUtils.buildButton("MenuTools.acceptQuest()", "Accept"),
+			HtmlUtils.buildButton("MenuTools.refuseQuest()", "Refuse")
+		])
+		ModalUtils.setData("proposedQuestId", cc.id)
 	},
 	refreshNpcDialog: function() {
-		$("input[name=showQuestButton]").hide() //Preventively hides the show Quest button
 		var npc = gameVars.currentNpc
-		$("#npcDialog_content").html(npc.dialogMessage)
+		var buttons = []
 		if (npc.hasNewQuests && !npc.hasActiveQuests) {
-			$("input[name=showQuestButton]").show()
+			buttons = [
+				HtmlUtils.buildButton("MenuTools.show('proposedQuestMenu')", "Show Quests")
+			]
 		}
+		ModalUtils.setProperties("NpcDialog", npc.name, npc.dialogMessage, buttons)
 	},
-	// showGameMenu: function() {
-	// 	MenuTools.refreshGameMenu()
-	// 	$("#gameMenu").show()
-	// },
-	// hideGameMenu: function() {
-	// 	$("#gameMenu").hide()
-	// },
+
 	abandonQuest: function(qId) {
 		var q = GameUtils.findQuest(qId)
 		q.abandon()
 		MenuTools.refreshJournalMenu()
 	},	
 	acceptQuest: function() {
-		var cId = ACEX.HtmlUtils.getInput("proposedQuestId")
+		var cId = ModalUtils.getData("proposedQuestId")
 		// TODO: add the quest to journal
 		// find the npc with this questId
 		var q = GameUtils.findQuest(cId)
 		q.accept()
-		MenuTools.hide("proposedQuestMenu")
+		manageWindowPlayPause("proposedQuestMenu")
 		console.log("Accepted mission " + q.name)
 		// TODO : show some message on screen (a toast)
 	},	
@@ -134,4 +143,58 @@ ConsoleUtils = {
 			q.accept()
 		}
 	}
+}
+
+ModalUtils = {
+	setProperties: function(current, title, content, buttons) {
+		buttons = buttons || []
+		var m = "#defaultModalWindow"
+		$(m).data("current", current)
+		$(m + " .modal-title").html(title)
+		$(m + " .modal-body").html(content)
+		$(m + " #additionalButtonsContainer").html("")
+		for (var bi in buttons) {
+			var htmlb = buttons[bi]
+			$(m + " #additionalButtonsContainer").append(htmlb)
+		}
+	},
+
+	setData: function(k, v) {
+		$("#defaultModalWindow").data(k, v)
+	},
+
+	getData: function(k) {
+		return $("#defaultModalWindow").data(k)
+	},
+
+	// TODO : buildButton could be put outside ModalUtils
+
+	hide: function() {
+		$("#defaultModalWindow").modal("hide")
+	},
+
+	close: function() {
+		hideModal()
+	},
+
+	show: function() {
+		$("#defaultModalWindow").modal("show")
+	}
+}
+
+HtmlUtils = {
+	buildHtmlUpgrade: function(name, desc, value) {
+		var htmlInit = "<div class='row'>"
+		var text = "<div class='text-default col-md-8'>" + desc + "</div>"
+		var btn = HtmlUtils.buildButton("MenuTools.upgrade" + ACEX.Utils.capitalize(name) + "()", ">>", 
+			"btn btn-danger btn-xs col-md-2")
+		var value = "<div class='col-md-2'>" + value + "</div>"
+		var htmlEnd = "</div>"
+		return htmlInit + text + btn + value + htmlEnd
+	},
+	buildButton: function(onclick, value, cls) {
+		cls = cls || "btn btn-lg btn-primary"
+		var html = "<input type='button' class='" + cls + "' onclick=\"" + onclick + "\" value=\"" + value + "\">"
+		return html
+	},
 }
