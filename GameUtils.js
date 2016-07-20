@@ -101,7 +101,8 @@ MenuTools = {
 				HtmlUtils.buildButton("MenuTools.show('proposedQuestMenu')", "Show Quests")
 			]
 		}
-		ModalUtils.setProperties("NpcDialog", npc.name, npc.dialogMessage, buttons)
+		ModalUtils.setProperties("NpcDialog", npc.name, "", buttons) //The content will be set with Typed.js
+		ModalUtils.setTyped(npc.dialogMessage)
 	},
 
 	abandonQuest: function(qId) {
@@ -178,6 +179,10 @@ ModalUtils = {
 
 	show: function() {
 		$("#defaultModalWindow").modal("show")
+	},
+
+	setTyped: function(msg) {
+		$("#defaultModalWindow .modal-body").typed({strings: [msg], speed: 0})
 	}
 }
 
