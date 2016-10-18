@@ -142,6 +142,8 @@ Enemy.prototype.setLoot = function() {
 	// chance to leave a diamond 30%
 	if (ACEX.Utils.chance(10)) {
 		gameLayer.addChild(new Diamond(this.obj.position))
+	}else if (ACEX.Utils.chance(15)) {
+		gameLayer.addChild(new HealthKit(this.obj.position))
 	}
 }
 

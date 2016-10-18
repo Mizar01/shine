@@ -199,7 +199,7 @@ function setObjects() {
 	var g = gameVars.grid
 	var p = gameVars.player
 	// Adding some turrets
-	for (var i = 0; i < 50; i++) {
+	for (var i = 0; i < 90; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
 		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
 		var lvl = ACEX.Utils.randInt(1, 4)
@@ -212,6 +212,14 @@ function setObjects() {
 		var lvl = ACEX.Utils.randInt(1, 4)
 		gameLayer.addChild(new Npc(GameUtils.randomName(), rx, ry))
 	}
+	for (var i = 0; i < 200; i++) {
+		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
+		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
+		var lvl = ACEX.Utils.randInt(1, 4)
+		var b = new Bug(lvl, "no-one")
+		b.obj.position.set(rx, ry)
+		gameLayer.addChild(b)
+	}
 	//Adding a test enemyspawner
 	gameLayer.addChild(new EnemySpawner(p.obj.position.x, p.obj.position.y + 300, 5))
 	// Adding a test turret
@@ -223,6 +231,15 @@ function setObjects() {
 	testOB.obj.position.set(p.obj.position.x - 300, p.obj.position.y)
 	testOB.obj.rotation = Math.PI / 2
 	gameLayer.addChild(testOB)
+	for (var i = 0; i < 50; i++) {
+		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
+		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
+		var lvl = ACEX.Utils.randInt(1, 4)
+		var tboss = new OverBoss(lvl, "Big Test Boss")
+		tboss.obj.position.set(rx, ry)
+		tboss.obj.rotation = Math.PI / 2
+		gameLayer.addChild(tboss)		
+	} 
 
 	// Adding a test quest
 	//var testQuest = new StandardKillQuest(null, "Bug", 100, 0, 2)

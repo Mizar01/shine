@@ -71,6 +71,16 @@ Player.prototype.setRandomPosition = function(topPos) {
 	this.obj.position.set(x, y)
 }
 
+Player.prototype.addHealth = function(qta) {
+	this.life = Math.min(this.maxLife, this.life + qta)
+}
+
+Player.prototype.addHealthPerc = function(perc) {
+	var qta = this.maxLife * perc / 100
+	this.addHealth(qta)
+}
+
+
 Player.prototype.levelUp = function() {
 	// NOTE : you cannot use level as the sole parameter determining
 	// the progress of each property, or you lose the manual upgrades
