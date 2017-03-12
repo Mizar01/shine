@@ -43,7 +43,7 @@ function init() {
 	if (_polygenEngineType == 'PHP') {
 		_polygen = PHPolygen
 	}
-	new ACEX(1860, 900, assets, "define_game")
+	new ACEX(1000, 700, assets, "define_game")
 
 	$('#defaultModalWindow').on('hidden.bs.modal', function () {
 		manageWindowPlayPause()
@@ -206,13 +206,13 @@ function setObjects() {
 		gameLayer.addChild(new Turret(lvl, rx, ry))
 	}
 	//Adding some npcs
-	for (var i = 0; i < 20; i++) {
+	for (var i = 0; i < 200; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
 		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
 		var lvl = ACEX.Utils.randInt(1, 4)
 		gameLayer.addChild(new Npc(GameUtils.randomName(), rx, ry))
 	}
-	for (var i = 0; i < 200; i++) {
+	for (var i = 0; i < 2000; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)
 		var ry = ACEX.Utils.randInt(-g.h / 2, g.h / 2)
 		var lvl = ACEX.Utils.randInt(1, 4)
@@ -230,6 +230,7 @@ function setObjects() {
 	var testOB = new OverBoss(2, "Big Test Boss")
 	testOB.obj.position.set(p.obj.position.x - 300, p.obj.position.y)
 	testOB.obj.rotation = Math.PI / 2
+	// Adding some other overbosses
 	gameLayer.addChild(testOB)
 	for (var i = 0; i < 50; i++) {
 		var rx = ACEX.Utils.randInt(-g.w / 2, g.w / 2)

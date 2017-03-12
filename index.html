@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>     
+<head>    
+      <!-- Compatible electron before import --> 
+      <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
       <!-- ACEX libraries -->
       <script src="pixi.js"></script>
       <script src="ACEX/ACEX.js"></script>
@@ -38,6 +40,9 @@
       <script src="enemies.js"></script>
       <script src="quests.js"></script>
       <script src="game.js"></script>
+
+      <!-- Compatible electron afer import -->
+      <script>if (window.module) module = window.module;</script>
 
       <link href="./bs/bootstrap_cyborg.min.css" rel="stylesheet">
       <link rel="stylesheet" type="text/css" href="style.css" />

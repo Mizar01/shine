@@ -15,7 +15,7 @@ Grid.prototype.redraw = function() {
 	var o = this.obj
 	var wspan = this.w/2
 	var hspan = this.h/2
-	o.alpha = 0.1
+	o.alpha = 0.4
 	o.lineStyle(1, 0xAAAAAA);
 	//v lines
 	for (var x = -wspan; x < wspan; x+= this.res) {

@@ -199,7 +199,8 @@ Bug.extends(Enemy, "Bug")
 
 Bug.prototype.redraw = function() {
 	var o = this.obj
-	o.beginFill(0xff0005)
+	// o.beginFill(0xff0005)
+	o.beginFill(ACEX.Utils.getRandomColor())
 	o.lineStyle(1, 0xaaaaff)
 	o.drawCircle(0, 0, this.collisionRange)
 	o.endFill()

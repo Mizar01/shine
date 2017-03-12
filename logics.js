@@ -52,6 +52,7 @@ CameraShakeLogic.extends(ACEX.Logic, "CameraShakeLogic")
 
 CameraShakeLogic.prototype.run = function() {
 	if (this.refresh) {
+		this.rest()
 	    this.shakeRadius = this.maxShakeRadius
 	    this.refresh = false
 	}
